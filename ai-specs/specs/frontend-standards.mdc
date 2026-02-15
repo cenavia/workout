@@ -1,0 +1,1108 @@
+---
+description: Angular frontend development standards, best practices, and conventions including component patterns, state management, UI/UX guidelines, and testing practices
+globs: ["frontend/src/**/*.{ts,html,scss}", "frontend/cypress/**/*.{ts,js}", "frontend/tsconfig.json", "frontend/angular.json", "frontend/package.json"]
+alwaysApply: true
+---
+
+# Angular Frontend Project Configuration and Best Practices
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Technology Stack](#technology-stack)
+  - [Core Technologies](#core-technologies)
+  - [UI Framework](#ui-framework)
+  - [State Management & Data Flow](#state-management--data-flow)
+  - [Testing Framework](#testing-framework)
+  - [Development Tools](#development-tools)
+- [Project Structure](#project-structure)
+- [Coding Standards](#coding-standards)
+  - [Language and Naming Conventions](#language-and-naming-conventions)
+  - [Component Conventions](#component-conventions)
+  - [State Management](#state-management)
+  - [Service Layer Architecture](#service-layer-architecture)
+- [UI/UX Standards](#uiux-standards)
+  - [TailwindCSS Integration](#tailwindcss-integration)
+  - [Form Handling](#form-handling)
+  - [Navigation Patterns](#navigation-patterns)
+  - [Accessibility](#accessibility)
+- [Testing Standards](#testing-standards)
+  - [Unit Testing with Jasmine/Karma](#unit-testing-with-jasminekarma)
+  - [End-to-End Testing with Cypress](#end-to-end-testing-with-cypress)
+  - [Test Organization](#test-organization)
+- [Configuration Standards](#configuration-standards)
+  - [TypeScript Configuration](#typescript-configuration)
+  - [ESLint Configuration](#eslint-configuration)
+  - [Environment Configuration](#environment-configuration)
+- [Security Patterns](#security-patterns)
+  - [Auth Guard Pattern](#auth-guard-pattern)
+  - [Token Interceptor Pattern](#token-interceptor-pattern)
+- [Performance Best Practices](#performance-best-practices)
+  - [Component Optimization](#component-optimization)
+  - [Bundle Optimization](#bundle-optimization)
+  - [API Efficiency](#api-efficiency)
+- [Development Workflow](#development-workflow)
+  - [Git Workflow](#git-workflow)
+  - [Development Scripts](#development-scripts)
+  - [Code Quality](#code-quality)
+
+---
+
+## Overview
+
+This document outlines the best practices, conventions, and standards used in Angular frontend applications. These practices ensure code consistency, maintainability, and optimal development experience following Angular 14+ patterns with TypeScript strict mode.
+
+## Technology Stack
+
+### Core Technologies
+- **Angular 14+**: Modern Angular with standalone components support
+- **TypeScript 4.7+**: With strict mode enabled for type safety
+- **Angular CLI**: Build tooling and development server
+- **Angular Router**: Client-side routing with lazy loading
+
+### UI Framework
+- **TailwindCSS 3.x**: Utility-first CSS framework for responsive design
+- **@tailwindcss/forms**: Form styling plugin
+- **SCSS**: Preprocessor for custom styles
+- **FontAwesome** (optional): Icon library
+
+### State Management & Data Flow
+- **RxJS**: Reactive programming with Observables
+- **BehaviorSubject**: For local reactive state management
+- **HttpClient**: HTTP client for API communication
+
+### Testing Framework
+- **Jasmine**: Unit testing framework
+- **Karma**: Test runner for unit tests
+- **Cypress** (optional): End-to-end testing
+
+### Development Tools
+- **ESLint**: Code linting with Angular-specific rules
+- **TypeScript**: Static type checking with strict mode
+- **Angular DevKit**: Build and development tooling
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── guards/                    # Route guards
+│   │   └── auth.guard.ts
+│   ├── interceptors/              # HTTP interceptors
+│   │   └── token.interceptor.ts
+│   ├── models/                    # TypeScript interfaces/types
+│   │   └── index.ts
+│   ├── services/                  # Core services
+│   │   └── index.ts
+│   ├── modules/                   # Feature modules (lazy-loaded)
+│   │   ├── auth/
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth-routing.module.ts
+│   │   │   ├── pages/
+│   │   │   └── components/
+│   │   └── layout/
+│   │       ├── layout.module.ts
+│   │       ├── layout-routing.module.ts
+│   │       ├── pages/
+│   │       └── components/
+│   ├── shared/                    # Shared module
+│   │   ├── shared.module.ts
+│   │   ├── components/
+│   │   ├── directives/
+│   │   └── pipes/
+│   ├── utils/                     # Utility functions
+│   ├── app.component.ts
+│   ├── app.module.ts
+│   └── app-routing.module.ts
+├── environments/
+│   ├── environment.ts
+│   └── environment.prod.ts
+├── assets/
+└── styles.scss
+```
+
+## Coding Standards
+
+### Language and Naming Conventions
+
+- **Component Naming**: Use PascalCase for Angular components (e.g., `UserProfileComponent`, `BoardDetailsComponent`)
+- **Variable Naming**: Use camelCase for variables and methods (e.g., `boardId`, `handleSubmit`, `fetchBoards`)
+- **Constants Naming**: Use UPPER_SNAKE_CASE for constants (e.g., `API_BASE_URL`, `MAX_ITEMS_PER_PAGE`)
+- **Type/Interface Naming**: Use PascalCase for types and interfaces (e.g., `BoardData`, `UserProps`, `CreateBoardDto`)
+- **File Naming**: Use kebab-case for all files (e.g., `user-profile.component.ts`, `auth.service.ts`)
+- **CSS Class Naming**: Use kebab-case for CSS classes (e.g., `board-card`, `user-profile`)
+- **Selector Naming**: Components use `app-` prefix with kebab-case; Directives use `app` prefix with camelCase
+
+| Type | Pattern | Example |
+|------|--------|---------|
+| Component | `kebab-case.component.ts` | `user-profile.component.ts` |
+| Service | `kebab-case.service.ts` | `auth.service.ts` |
+| Guard | `kebab-case.guard.ts` | `auth.guard.ts` |
+| Interceptor | `kebab-case.interceptor.ts` | `token.interceptor.ts` |
+| Model | `kebab-case.model.ts` | `user.model.ts` |
+| Module | `kebab-case.module.ts` | `auth.module.ts` |
+| Directive | `kebab-case.directive.ts` | `highlight.directive.ts` |
+| Pipe | `kebab-case.pipe.ts` | `format-date.pipe.ts` |
+
+**Selector Examples:**
+
+```typescript
+// Components: element selector with 'app-' prefix (kebab-case)
+@Component({
+  selector: 'app-user-profile',
+  ...
+})
+export class UserProfileComponent {}
+
+// Directives: attribute selector with 'app' prefix (camelCase)
+@Directive({
+  selector: '[appHighlight]',
+  ...
+})
+export class HighlightDirective {}
+```
+
+**Examples:**
+
+```typescript
+// Good: All in English with proper naming
+import { Component, OnInit } from '@angular/core';
+import { Board, CreateBoardDto } from '@models/board.model';
+import { BoardsService } from '@services/boards.service';
+
+@Component({
+  selector: 'app-board-card',
+  templateUrl: './board-card.component.html',
+  styleUrls: ['./board-card.component.scss']
+})
+export class BoardCardComponent implements OnInit {
+  boards: Board[] = [];
+  isLoading = false;
+  errorMessage: string | null = null;
+
+  constructor(private boardsService: BoardsService) {}
+
+  ngOnInit(): void {
+    this.loadBoards();
+  }
+
+  // Handle board card click event
+  handleCardClick(board: Board): void {
+    console.log('Board clicked:', board.id);
+  }
+
+  private loadBoards(): void {
+    this.isLoading = true;
+    this.boardsService.getBoards().subscribe({
+      next: (boards) => {
+        this.boards = boards;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Failed to load boards';
+        this.isLoading = false;
+      }
+    });
+  }
+}
+
+// Avoid: Non-English names
+@Component({
+  selector: 'app-tarjeta-tablero',
+  ...
+})
+export class TarjetaTableroComponent {
+  tableros: Tablero[] = [];
+  estaCargando = false;
+  
+  manejarClicTarjeta(tablero: Tablero): void {
+    console.log('Tablero seleccionado:', tablero.id);
+  }
+}
+```
+
+**Error Messages and Console Logs:**
+
+```typescript
+// Good: English error messages
+this.boardsService.getBoards().subscribe({
+  next: (boards) => this.boards = boards,
+  error: (error) => {
+    console.error('Failed to fetch boards:', error);
+    this.errorMessage = 'Unable to load boards. Please try again later.';
+  }
+});
+
+// Avoid: Non-English messages
+this.boardsService.getBoards().subscribe({
+  error: (error) => {
+    console.error('Error al obtener tableros:', error);
+    this.errorMessage = 'No se pudieron cargar los tableros.';
+  }
+});
+```
+
+### Component Conventions
+
+#### Component Structure
+- **Always use decorators** properly with explicit selectors
+- Use **TypeScript strict mode** for all components
+- Implement **OnInit** lifecycle hook when needed
+- Keep **template and styles** in separate files for larger components
+
+```typescript
+// Preferred - Component with proper structure
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+type BoardCardProps = {
+  board: Board;
+  onSelect: (board: Board) => void;
+};
+
+@Component({
+  selector: 'app-board-card',
+  templateUrl: './board-card.component.html',
+  styleUrls: ['./board-card.component.scss']
+})
+export class BoardCardComponent implements OnInit {
+  @Input() board!: Board;
+  @Output() select = new EventEmitter<Board>();
+  
+  isHovered = false;
+
+  ngOnInit(): void {
+    // Initialization logic
+  }
+
+  handleClick(): void {
+    this.select.emit(this.board);
+  }
+}
+```
+
+#### Input/Output Decorators
+- **Define Input types** explicitly
+- Use **Output with EventEmitter** for child-to-parent communication
+- Include **default values** where appropriate
+
+```typescript
+@Component({
+  selector: 'app-list-item',
+  templateUrl: './list-item.component.html'
+})
+export class ListItemComponent {
+  @Input() item!: ListItem;
+  @Input() index = 0;
+  @Input() isEditable = true;
+  
+  @Output() edit = new EventEmitter<ListItem>();
+  @Output() delete = new EventEmitter<string>();
+  
+  onEdit(): void {
+    this.edit.emit(this.item);
+  }
+  
+  onDelete(): void {
+    this.delete.emit(this.item.id);
+  }
+}
+```
+
+### State Management
+
+#### Local State with BehaviorSubject
+- Use **BehaviorSubject** for reactive state in services
+- Expose state as **readonly Observable**
+- Use **private setters** for state mutations
+
+```typescript
+@Injectable({
+  providedIn: 'root'
+})
+export class BoardsService {
+  private _boards$ = new BehaviorSubject<Board[]>([]);
+  readonly boards$ = this._boards$.asObservable();
+
+  private _selectedBoard$ = new BehaviorSubject<Board | null>(null);
+  readonly selectedBoard$ = this._selectedBoard$.asObservable();
+
+  get currentBoards(): Board[] {
+    return this._boards$.getValue();
+  }
+
+  setBoards(boards: Board[]): void {
+    this._boards$.next(boards);
+  }
+
+  selectBoard(board: Board): void {
+    this._selectedBoard$.next(board);
+  }
+}
+```
+
+#### Loading and Error States
+- **Always handle loading states** for async operations
+- **Implement error handling** with user-friendly messages
+- **Use component properties** for UI state feedback
+
+```typescript
+@Component({
+  selector: 'app-boards-list',
+  templateUrl: './boards-list.component.html'
+})
+export class BoardsListComponent implements OnInit {
+  boards: Board[] = [];
+  isLoading = true;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+
+  constructor(private boardsService: BoardsService) {}
+
+  ngOnInit(): void {
+    this.loadBoards();
+  }
+
+  private loadBoards(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+    
+    this.boardsService.getBoards().subscribe({
+      next: (boards) => {
+        this.boards = boards;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Failed to load boards: ' + error.message;
+        this.isLoading = false;
+      }
+    });
+  }
+}
+```
+
+### Service Layer Architecture
+
+#### API Services
+- **Centralize API calls** in service files
+- Use **HttpClient** with proper typing
+- **Export service** as injectable singleton
+- **Handle errors at service level** when appropriate
+- Use **checkToken context** for authenticated endpoints
+
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { environment } from '@environments/environment';
+import { checkToken } from '@interceptors/token.interceptor';
+import { Board, CreateBoardDto, UpdateBoardDto } from '@models/board.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BoardsService {
+  private apiUrl = `${environment.API_URL}/api/v1/boards`;
+  
+  private _backgroundColor$ = new BehaviorSubject<string>('#ffffff');
+  readonly backgroundColor$ = this._backgroundColor$.asObservable();
+
+  constructor(private http: HttpClient) {}
+
+  getBoards(): Observable<Board[]> {
+    return this.http.get<Board[]>(this.apiUrl, { context: checkToken() });
+  }
+
+  getBoard(id: string): Observable<Board> {
+    return this.http.get<Board>(`${this.apiUrl}/${id}`, { context: checkToken() })
+      .pipe(
+        tap(board => this.setBackgroundColor(board.backgroundColor))
+      );
+  }
+
+  createBoard(data: CreateBoardDto): Observable<Board> {
+    return this.http.post<Board>(this.apiUrl, data, { context: checkToken() });
+  }
+
+  updateBoard(id: string, data: UpdateBoardDto): Observable<Board> {
+    return this.http.put<Board>(`${this.apiUrl}/${id}`, data, { context: checkToken() });
+  }
+
+  deleteBoard(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { context: checkToken() });
+  }
+
+  setBackgroundColor(color: string): void {
+    this._backgroundColor$.next(color);
+  }
+}
+```
+
+#### Model Definitions
+- **Define interfaces** for all API responses
+- **Create DTOs** for create/update operations
+- **Use optional properties** with `?` annotation
+
+```typescript
+// src/app/models/board.model.ts
+import { List } from './list.model';
+import { User } from './user.model';
+
+export interface Board {
+  id: string;
+  title: string;
+  backgroundColor: string;
+  members: User[];
+  lists: List[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateBoardDto {
+  title: string;
+  backgroundColor?: string;
+}
+
+export interface UpdateBoardDto {
+  title?: string;
+  backgroundColor?: string;
+}
+
+export interface BoardSummary {
+  id: string;
+  title: string;
+  backgroundColor: string;
+  membersCount: number;
+}
+```
+
+## UI/UX Standards
+
+### TailwindCSS Integration
+- Use **TailwindCSS utility classes** for styling
+- **Configure tailwind.config.js** properly
+- Follow **responsive design** principles with Tailwind breakpoints
+
+```javascript
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{html,ts}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
+}
+```
+
+```scss
+// styles.scss
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Custom styles below
+```
+
+### Form Handling
+- Use **Reactive Forms** for complex forms
+- Implement **real-time validation** with Validators
+- **Disable submit buttons** during form submission
+- **Show validation errors** appropriately
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html'
+})
+export class LoginComponent implements OnInit {
+  form!: FormGroup;
+  isLoading = false;
+  errorMessage: string | null = null;
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  private buildForm(): void {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    
+    this.isLoading = true;
+    this.errorMessage = null;
+    
+    const { email, password } = this.form.value;
+    // Submit logic here
+  }
+}
+```
+
+```html
+<!-- Template with validation feedback -->
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-4">
+    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+      Email
+    </label>
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      [class.border-red-500]="form.get('email')?.invalid && form.get('email')?.touched"
+    />
+    <p *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched"
+       class="text-red-500 text-xs mt-1">
+      Email is required
+    </p>
+    <p *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched"
+       class="text-red-500 text-xs mt-1">
+      Please enter a valid email
+    </p>
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="isLoading"
+    class="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    <span *ngIf="!isLoading">Submit</span>
+    <span *ngIf="isLoading">Loading...</span>
+  </button>
+</form>
+```
+
+### Navigation Patterns
+- Use **Angular Router** for all navigation
+- **Implement lazy loading** for feature modules
+- Use **programmatic navigation** with Router service
+
+```typescript
+// app-routing.module.ts
+const routes: Routes = [
+  {
+    path: 'auth',
+    loadChildren: () => import('./modules/auth/auth.module')
+      .then(m => m.AuthModule)
+  },
+  {
+    path: 'app',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./modules/layout/layout.module')
+      .then(m => m.LayoutModule)
+  },
+  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/auth/login' }
+];
+```
+
+```typescript
+// Component navigation
+import { Router } from '@angular/router';
+
+@Component({...})
+export class HeaderComponent {
+  constructor(private router: Router) {}
+
+  navigateToDashboard(): void {
+    this.router.navigate(['/app/dashboard']);
+  }
+  
+  navigateToBoard(boardId: string): void {
+    this.router.navigate(['/app/boards', boardId]);
+  }
+}
+```
+
+### Accessibility
+- Include **aria-label** attributes for interactive elements
+- Use **semantic HTML** elements
+- Ensure **keyboard navigation** support
+- Provide **alternative text** for images
+
+```html
+<button 
+  type="button" 
+  aria-label="Create new board"
+  (click)="createBoard()"
+  class="p-2 rounded-md hover:bg-gray-100"
+>
+  <fa-icon [icon]="faPlus"></fa-icon>
+</button>
+
+<input 
+  type="text" 
+  placeholder="Search boards" 
+  aria-label="Search boards by title"
+  [formControl]="searchControl"
+/>
+```
+
+## Testing Standards
+
+### Unit Testing with Jasmine/Karma
+- **Test component behavior** rather than implementation details
+- Use **TestBed** for component testing
+- **Mock services** with jasmine spies
+- **Test inputs and outputs** properly
+
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BoardCardComponent } from './board-card.component';
+
+describe('BoardCardComponent', () => {
+  let component: BoardCardComponent;
+  let fixture: ComponentFixture<BoardCardComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [BoardCardComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(BoardCardComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should emit select event when clicked', () => {
+    const board = { id: '1', title: 'Test Board' } as Board;
+    component.board = board;
+    
+    spyOn(component.select, 'emit');
+    
+    component.handleClick();
+    
+    expect(component.select.emit).toHaveBeenCalledWith(board);
+  });
+});
+```
+
+### End-to-End Testing with Cypress
+- **Test user workflows** rather than implementation details
+- Use **data-testid** attributes for reliable element selection
+- **Organize tests by feature**
+- **Include API testing** alongside UI testing
+
+```typescript
+// cypress/e2e/boards.cy.ts
+describe('Boards Feature', () => {
+  beforeEach(() => {
+    cy.login('test@example.com', 'password123');
+    cy.visit('/app/boards');
+  });
+
+  it('should display list of boards', () => {
+    cy.get('[data-testid="board-card"]').should('have.length.at.least', 1);
+  });
+
+  it('should create a new board', () => {
+    cy.get('[data-testid="create-board-btn"]').click();
+    cy.get('[data-testid="board-title-input"]').type('New Test Board');
+    cy.get('[data-testid="submit-btn"]').click();
+    
+    cy.get('[data-testid="board-card"]').should('contain', 'New Test Board');
+  });
+});
+```
+
+### Test Organization
+- **Group related tests** with describe blocks
+- **Use descriptive test names** that explain the expected behavior
+- **Test both success and error scenarios**
+- **Include edge cases** and validation testing
+
+## Configuration Standards
+
+### TypeScript Configuration
+- Enable **strict mode** for type checking
+- Use **path mapping** with aliases for cleaner imports
+- Configure **Angular compiler options** properly
+
+```json
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2020",
+    "module": "ES2020",
+    "lib": ["ES2020", "dom"],
+    "paths": {
+      "@services/*": ["src/app/services/*"],
+      "@models/*": ["src/app/models/*"],
+      "@guards/*": ["src/app/guards/*"],
+      "@interceptors/*": ["src/app/interceptors/*"],
+      "@utils/*": ["src/app/utils/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@environments/*": ["src/environments/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}
+```
+
+### ESLint Configuration
+- Extend **Angular ESLint** configuration
+- Include **template linting** rules
+- **Enforce selector conventions**
+
+```json
+{
+  "root": true,
+  "ignorePatterns": ["projects/**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {}
+    }
+  ]
+}
+```
+
+### Environment Configuration
+- Use **environment files** for configuration
+- **Separate configurations** for development and production
+- **Configure file replacements** in angular.json
+
+```typescript
+// environment.ts
+export const environment = {
+  production: false,
+  API_URL: 'http://localhost:3000'
+};
+
+// environment.prod.ts
+export const environment = {
+  production: true,
+  API_URL: 'https://api.production.com'
+};
+```
+
+## Security Patterns
+
+### Auth Guard Pattern
+- **Implement CanActivate** interface
+- Use **Observable return type** for async checks
+- **Redirect to login** when not authenticated
+
+```typescript
+import { Injectable } from '@angular/core';
+import { CanActivate, Router, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AuthService } from '@services/auth.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  canActivate(): Observable<boolean | UrlTree> {
+    return this.authService.user$.pipe(
+      map(user => user ? true : this.router.createUrlTree(['/auth/login']))
+    );
+  }
+}
+```
+
+### Token Interceptor Pattern
+- Use **HttpContext** for selective token injection
+- **Implement token refresh** logic for 401 errors
+- **Export checkToken function** for service usage
+
+```typescript
+import { Injectable } from '@angular/core';
+import {
+  HttpInterceptor, HttpRequest, HttpHandler,
+  HttpEvent, HttpContext, HttpContextToken, HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, filter, take, switchMap, finalize } from 'rxjs/operators';
+import { AuthService } from '@services/auth.service';
+
+const CHECK_TOKEN = new HttpContextToken<boolean>(() => false);
+
+export function checkToken() {
+  return new HttpContext().set(CHECK_TOKEN, true);
+}
+
+@Injectable()
+export class TokenInterceptor implements HttpInterceptor {
+  private isRefreshing = false;
+  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
+
+  constructor(private authService: AuthService) {}
+
+  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    if (!req.context.get(CHECK_TOKEN)) {
+      return next.handle(req);
+    }
+
+    const token = this.authService.getAccessToken();
+    if (token) {
+      req = this.addToken(req, token);
+    }
+
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return this.handle401Error(req, next);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private addToken(req: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
+    return req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+  }
+
+  private handle401Error(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+
+      const refreshToken = this.authService.getRefreshToken();
+      
+      if (!refreshToken) {
+        this.authService.logout();
+        return throwError(() => new Error('No refresh token available'));
+      }
+
+      return this.authService.refreshToken(refreshToken).pipe(
+        switchMap(response => {
+          this.refreshTokenSubject.next(response.accessToken);
+          return next.handle(this.addToken(req, response.accessToken));
+        }),
+        catchError(error => {
+          this.authService.logout();
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this.isRefreshing = false;
+        })
+      );
+    }
+
+    return this.refreshTokenSubject.pipe(
+      filter(token => token !== null),
+      take(1),
+      switchMap(token => next.handle(this.addToken(req, token!)))
+    );
+  }
+}
+```
+
+## Performance Best Practices
+
+### Component Optimization
+- **Use OnPush change detection** for performance-critical components
+- **Implement trackBy** functions for ngFor loops
+- **Avoid unnecessary re-renders** with proper change detection
+- **Use lazy loading** for feature modules
+
+```typescript
+import { Component, ChangeDetectionStrategy, TrackByFunction } from '@angular/core';
+
+@Component({
+  selector: 'app-boards-list',
+  templateUrl: './boards-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class BoardsListComponent {
+  boards: Board[] = [];
+
+  trackByBoardId: TrackByFunction<Board> = (index, board) => board.id;
+}
+```
+
+```html
+<div *ngFor="let board of boards; trackBy: trackByBoardId">
+  <app-board-card [board]="board"></app-board-card>
+</div>
+```
+
+### Bundle Optimization
+- **Configure build budgets** in angular.json
+- **Use production builds** with optimization enabled
+- **Lazy load routes** to reduce initial bundle size
+- **Monitor bundle size** with source-map-explorer
+
+```json
+{
+  "configurations": {
+    "production": {
+      "budgets": [
+        {
+          "type": "initial",
+          "maximumWarning": "500kb",
+          "maximumError": "1mb"
+        },
+        {
+          "type": "anyComponentStyle",
+          "maximumWarning": "2kb",
+          "maximumError": "4kb"
+        }
+      ],
+      "outputHashing": "all"
+    }
+  }
+}
+```
+
+### API Efficiency
+- **Implement proper error handling** for network requests
+- **Use tap operator** for side effects
+- **Cache API responses** where appropriate
+- **Batch API calls** when possible
+
+```typescript
+import { Observable, shareReplay } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ConfigService {
+  private config$: Observable<Config> | null = null;
+
+  getConfig(): Observable<Config> {
+    if (!this.config$) {
+      this.config$ = this.http.get<Config>(`${this.apiUrl}/config`).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.config$;
+  }
+}
+```
+
+## Development Workflow
+
+### Git Workflow
+- **Feature Branches**: Develop features in separate branches with descriptive suffix "-frontend"
+- **Descriptive Commits**: Write descriptive commit messages in English
+- **Code Review**: Code review before merging
+- **Small Branches**: Keep branches small and focused
+
+### Development Scripts
+```bash
+ng serve                    # Development server
+ng build                    # Production build
+ng build --configuration=development  # Development build
+ng test                     # Run unit tests
+ng test --no-watch --browsers=ChromeHeadless  # CI unit tests
+ng lint                     # Run ESLint
+ng e2e                      # Run e2e tests (if configured)
+```
+
+### Code Quality
+- **ESLint validation** before commits
+- **TypeScript compilation** without errors
+- **All tests passing** before deployment
+- **Strict template checking** enabled
+
+## Validation Checklist
+
+### Configuration
+- [ ] angular.json configured correctly
+- [ ] tsconfig.json with strict: true and aliases
+- [ ] package.json with correct dependencies
+- [ ] .eslintrc.json with Angular rules
+
+### Structure
+- [ ] Folders follow defined architecture
+- [ ] Feature modules created with lazy loading
+- [ ] Shared module configured
+- [ ] Services in correct location
+
+### Code
+- [ ] Selectors follow convention (app-* / app*)
+- [ ] Imports use aliases (@services/*, etc.)
+- [ ] Services return Observable<T>
+- [ ] Guards implement CanActivate
+- [ ] Interceptors registered in providers
+
+### Routing
+- [ ] Lazy loading configured
+- [ ] Guards applied to protected routes
+- [ ] Default redirects defined
+
+### Types
+- [ ] TypeScript models defined
+- [ ] No use of 'any'
+- [ ] Interfaces exported
+
+This document serves as the foundation for maintaining code quality and consistency across Angular frontend applications. All team members should follow these practices to ensure a maintainable and scalable codebase.

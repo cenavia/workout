@@ -1,0 +1,47 @@
+# Default recipe
+default:
+    @just --list
+
+# Install dependencies
+install:
+    uv sync
+
+# Install with dev dependencies
+install-dev:
+    uv sync --group dev
+
+# Run LangGraph in development mode
+run:
+    uv run langgraph dev
+
+# Start PostgreSQL with Docker
+db-up:
+    docker-compose up -d
+
+# Stop PostgreSQL
+db-down:
+    docker-compose down
+
+# Run tests
+test:
+    uv run pytest
+
+# Format code
+format:
+    uv run ruff format src/
+
+# Lint code
+lint:
+    uv run ruff check src/
+
+# Lint and fix
+lint-fix:
+    uv run ruff check src/ --fix
+
+# Ingest workout documents for RAG
+ingest:
+    uv run python -m agents.rag.ingest
+
+# Start FastAPI server
+api:
+    uv run uvicorn api.main:app --reload --host 0.0.0.0 --port 8000

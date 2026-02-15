@@ -1,0 +1,1748 @@
+---
+description: Backend development standards, best practices, and conventions for Node.js/TypeScript API applications following Clean Architecture and Domain-Driven Design principles with strict TypeScript, ESM modules, and enterprise patterns.
+globs: ["src/**/*.ts", "tests/**/*.ts", "package.json", "tsconfig.json", "vitest.config.ts", "biome.json"]
+alwaysApply: true
+---
+
+# Backend Project Standards and Best Practices
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Technology Stack](#technology-stack)
+  - [Core Technologies](#core-technologies)
+  - [Testing Framework](#testing-framework)
+  - [Development Tools](#development-tools)
+- [Architecture Overview](#architecture-overview)
+  - [Clean Architecture](#clean-architecture)
+  - [Domain-Driven Design (DDD)](#domain-driven-design-ddd)
+  - [Project Structure](#project-structure)
+- [Domain-Driven Design Principles](#domain-driven-design-principles)
+  - [Entities](#entities)
+  - [Value Objects](#value-objects)
+  - [Aggregate Roots](#aggregate-roots)
+  - [Domain Events](#domain-events)
+  - [Domain Errors](#domain-errors)
+  - [Repositories](#repositories)
+- [SOLID and DRY Principles](#solid-and-dry-principles)
+  - [Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
+  - [Open/Closed Principle (OCP)](#openclosed-principle-ocp)
+  - [Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
+  - [Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
+  - [Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
+  - [DRY (Don't Repeat Yourself)](#dry-dont-repeat-yourself)
+- [Coding Standards](#coding-standards)
+  - [Naming Conventions](#naming-conventions)
+  - [TypeScript Usage](#typescript-usage)
+  - [Error Handling](#error-handling)
+  - [Validation Patterns](#validation-patterns)
+- [Application Layer Patterns](#application-layer-patterns)
+  - [Use Cases](#use-cases)
+  - [DTOs](#dtos)
+  - [Either Pattern for Error Handling](#either-pattern-for-error-handling)
+- [API Design Standards](#api-design-standards)
+  - [REST Endpoints](#rest-endpoints)
+  - [Request/Response Patterns](#requestresponse-patterns)
+  - [Error Response Format](#error-response-format)
+- [Database Patterns](#database-patterns)
+  - [Repository Pattern](#repository-pattern)
+  - [Repository Implementation](#repository-implementation)
+- [Testing Standards](#testing-standards)
+  - [Test File Structure](#test-file-structure)
+  - [Test Organization Pattern](#test-organization-pattern)
+  - [Tests for Entities](#tests-for-entities)
+  - [Tests for Value Objects](#tests-for-value-objects)
+  - [Tests for Use Cases](#tests-for-use-cases)
+  - [Fixtures and Object Mothers](#fixtures-and-object-mothers)
+  - [Repository Mocks](#repository-mocks)
+- [Path Aliases Configuration](#path-aliases-configuration)
+- [Development Workflow](#development-workflow)
+  - [Git Workflow](#git-workflow)
+  - [Code Quality](#code-quality)
+  - [Validation Checklist](#validation-checklist)
+
+---
+
+## Overview
+
+This document outlines the best practices, conventions, and standards for Node.js/TypeScript API applications following Clean Architecture and Domain-Driven Design principles. The architecture ensures code consistency, maintainability, testability, and scalability.
+
+## Technology Stack
+
+### Core Technologies
+- **Node.js**: 20+ Runtime environment with ESM modules
+- **TypeScript**: 5.6+ with strict mode enabled
+- **ESM Modules**: Native ES modules (`"type": "module"`)
+
+### Testing Framework
+- **Vitest**: Modern testing framework with TypeScript support
+- **Coverage**: v8 provider with text and lcov reporters
+- **Test Location**: `tests/` directory mirroring `src/` structure
+
+### Development Tools
+- **Biome**: Linting and formatting (replaces ESLint + Prettier)
+- **tsx**: TypeScript execution for development
+- **tsc-alias**: Path alias resolution for builds
+
+## Architecture Overview
+
+### Clean Architecture
+
+Clean Architecture organizes code in concentric layers with strict dependency rules, ensuring the domain remains pure and independent of external frameworks.
+
+**Core Principles:**
+1. **Independence of frameworks**: Domain doesn't depend on external libraries
+2. **Testable**: Business logic can be tested without UI, DB, or external services
+3. **Independence of UI**: Interface can change without affecting the domain
+4. **Independence of DB**: Database can be changed without touching the domain
+5. **Independence of external agents**: Business rules don't know about the outside world
+
+**Dependency Rule:**
+```
+infrastructure → application → domain
+     ↓               ↓            ↓
+   can            can          CANNOT
+  import         import        import
+   from           from        from anyone
+ application     domain          else
+```
+
+**CRITICAL**: Domain is pure and DOES NOT import from upper layers.
+
+### Domain-Driven Design (DDD)
+
+Domain-Driven Design is a methodology focused on modeling software according to business logic and domain knowledge.
+
+**Benefits:**
+- **Improved Communication**: Promotes ubiquitous language between developers and domain experts
+- **Clear Domain Models**: Builds models that accurately reflect business rules
+- **High Maintainability**: Divides system into bounded contexts for easier maintenance
+
+### Project Structure
+
+```
+project-root/
+├── src/
+│   └── contexts/
+│       ├── shared/                          # Shared building blocks
+│       │   ├── domain/
+│       │   │   ├── identifier.ts            # Base ID class
+│       │   │   ├── uuid.ts                  # UUID implementation
+│       │   │   ├── value-object.ts          # Base Value Object
+│       │   │   ├── entity.ts                # Base Entity
+│       │   │   ├── aggregate-root.ts        # Base Aggregate Root
+│       │   │   ├── domain-event.ts          # Domain Event interface
+│       │   │   ├── either.ts                # Result pattern
+│       │   │   └── errors/
+│       │   │       └── domain.error.ts      # Base error classes
+│       │   └── application/
+│       │       └── use-case.ts              # Use Case interface
+│       │
+│       └── {bounded-context}/               # Per bounded context
+│           ├── domain/
+│           │   ├── entities/
+│           │   │   └── {entity}.entity.ts
+│           │   ├── value-objects/
+│           │   │   └── {vo}.vo.ts
+│           │   ├── events/
+│           │   │   └── {event}.event.ts
+│           │   ├── errors/
+│           │   │   └── {context}.error.ts
+│           │   └── repositories/
+│           │       └── {entity}.repository.ts   # Port/interface
+│           │
+│           ├── application/
+│           │   ├── use-cases/
+│           │   │   └── {action}-{entity}.usecase.ts
+│           │   └── dtos/
+│           │       ├── {action}-{entity}.dto.ts
+│           │       └── {entity}.response.dto.ts
+│           │
+│           └── infrastructure/
+│               ├── persistence/
+│               │   └── mongo-{entity}.repository.ts
+│               └── adapters/
+│                   └── {external}.adapter.ts
+│
+├── tests/
+│   └── contexts/
+│       └── {bounded-context}/
+│           ├── domain/
+│           ├── application/
+│           ├── fixtures/
+│           │   └── {entity}.fixture.ts
+│           └── mocks/
+│               └── {entity}.repository.mock.ts
+│
+├── package.json
+├── tsconfig.json
+├── biome.json
+├── vitest.config.ts
+└── README.md
+```
+
+## Domain-Driven Design Principles
+
+### Entities
+
+Entities are objects with a distinct identity that persists over time. They are identified by their unique identifier, not their attributes.
+
+**Base Class:**
+```typescript
+// src/contexts/shared/domain/entity.ts
+import { Identifier } from "./identifier.js";
+
+export abstract class Entity<T, IdType extends Identifier<unknown>> {
+  protected readonly _id: IdType;
+  protected props: T;
+
+  protected constructor(id: IdType, props: T) {
+    this._id = id;
+    this.props = props;
+  }
+
+  get id(): IdType {
+    return this._id;
+  }
+
+  equals(other?: Entity<T, IdType>): boolean {
+    if (other === null || other === undefined) {
+      return false;
+    }
+    if (!(other instanceof Entity)) {
+      return false;
+    }
+    return this._id.equals(other._id);
+  }
+}
+```
+
+**Entity Example:**
+```typescript
+// src/contexts/rooms/domain/entities/room.entity.ts
+import { Entity } from "@/shared/domain/entity.js";
+import { Uuid } from "@/shared/domain/uuid.js";
+import { Money } from "@/shared/domain/value-objects/money.vo.js";
+import { RoomType } from "../value-objects/room-type.vo.js";
+
+interface RoomProps {
+  number: string;
+  type: RoomType;
+  pricePerNight: Money;
+  isAvailable: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class Room extends Entity<RoomProps, Uuid> {
+  private constructor(id: Uuid, props: RoomProps) {
+    super(id, props);
+  }
+
+  static create(props: Omit<RoomProps, "createdAt" | "updatedAt">, id?: Uuid): Room {
+    const now = new Date();
+    return new Room(id ?? Uuid.generate(), {
+      ...props,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
+  static reconstitute(id: Uuid, props: RoomProps): Room {
+    return new Room(id, props);
+  }
+
+  get number(): string {
+    return this.props.number;
+  }
+
+  get pricePerNight(): Money {
+    return this.props.pricePerNight;
+  }
+
+  get isAvailable(): boolean {
+    return this.props.isAvailable;
+  }
+
+  markAsUnavailable(): void {
+    this.props.isAvailable = false;
+    this.props.updatedAt = new Date();
+  }
+
+  markAsAvailable(): void {
+    this.props.isAvailable = true;
+    this.props.updatedAt = new Date();
+  }
+}
+```
+
+**Best Practices:**
+- Use private constructor with factory methods (`create()`, `reconstitute()`)
+- Encapsulate business logic within entity methods
+- Always generate timestamps in factory methods
+- Use `reconstitute()` for rebuilding from persistence
+
+### Value Objects
+
+Value Objects describe aspects of the domain without conceptual identity. They are defined by their attributes and are immutable.
+
+**Base Class:**
+```typescript
+// src/contexts/shared/domain/value-object.ts
+export abstract class ValueObject<T extends Record<string, unknown>> {
+  protected readonly props: T;
+
+  protected constructor(props: T) {
+    this.props = Object.freeze(props);
+  }
+
+  equals(other?: ValueObject<T>): boolean {
+    if (other === null || other === undefined) {
+      return false;
+    }
+    if (other.props === undefined) {
+      return false;
+    }
+    return JSON.stringify(this.props) === JSON.stringify(other.props);
+  }
+}
+```
+
+**Value Object Example:**
+```typescript
+// src/contexts/bookings/domain/value-objects/date-range.vo.ts
+import { ValueObject } from "@/shared/domain/value-object.js";
+import { InvalidDateRangeError } from "../errors/booking.error.js";
+
+interface DateRangeProps {
+  startDate: Date;
+  endDate: Date;
+}
+
+export class DateRange extends ValueObject<DateRangeProps> {
+  private constructor(props: DateRangeProps) {
+    super(props);
+  }
+
+  static create(startDate: Date, endDate: Date): DateRange {
+    if (startDate >= endDate) {
+      throw new InvalidDateRangeError("Start date must be before end date");
+    }
+    return new DateRange({ startDate, endDate });
+  }
+
+  get startDate(): Date {
+    return this.props.startDate;
+  }
+
+  get endDate(): Date {
+    return this.props.endDate;
+  }
+
+  get nights(): number {
+    const diff = this.props.endDate.getTime() - this.props.startDate.getTime();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+
+  overlaps(other: DateRange): boolean {
+    return this.startDate < other.endDate && this.endDate > other.startDate;
+  }
+}
+```
+
+**Best Practices:**
+- Make props immutable with `Object.freeze()`
+- Use static factory methods with validation
+- Implement domain logic methods (e.g., `overlaps()`, `add()`)
+- Implement `equals()` for value comparison
+
+### Aggregate Roots
+
+Aggregates are clusters of entities and value objects that must be treated as a unit. The Aggregate Root is the entry point for all operations.
+
+**Base Class:**
+```typescript
+// src/contexts/shared/domain/aggregate-root.ts
+import { Entity } from "./entity.js";
+import { Identifier } from "./identifier.js";
+import { DomainEvent } from "./domain-event.js";
+
+export abstract class AggregateRoot<T, IdType extends Identifier<unknown>> extends Entity<T, IdType> {
+  private _domainEvents: DomainEvent[] = [];
+
+  get domainEvents(): ReadonlyArray<DomainEvent> {
+    return [...this._domainEvents];
+  }
+
+  protected addDomainEvent(event: DomainEvent): void {
+    this._domainEvents.push(event);
+  }
+
+  clearDomainEvents(): void {
+    this._domainEvents = [];
+  }
+}
+```
+
+**Aggregate Example:**
+```typescript
+// src/contexts/bookings/domain/entities/booking.entity.ts
+import { AggregateRoot } from "@/shared/domain/aggregate-root.js";
+import { Uuid } from "@/shared/domain/uuid.js";
+import { DateRange } from "../value-objects/date-range.vo.js";
+import { BookingStatus } from "../value-objects/booking-status.vo.js";
+import { BookingCreatedEvent } from "../events/booking-created.event.js";
+import { BookingAlreadyCancelledError } from "../errors/booking.error.js";
+
+interface BookingProps {
+  userId: Uuid;
+  roomId: Uuid;
+  dateRange: DateRange;
+  status: BookingStatus;
+  totalPrice: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class Booking extends AggregateRoot<BookingProps, Uuid> {
+  private constructor(id: Uuid, props: BookingProps) {
+    super(id, props);
+  }
+
+  static create(
+    props: Omit<BookingProps, "status" | "createdAt" | "updatedAt">,
+    id?: Uuid
+  ): Booking {
+    const bookingId = id ?? Uuid.generate();
+    const now = new Date();
+
+    const booking = new Booking(bookingId, {
+      ...props,
+      status: BookingStatus.PENDING,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    booking.addDomainEvent(
+      new BookingCreatedEvent({
+        bookingId: bookingId.value,
+        userId: props.userId.value,
+        roomId: props.roomId.value,
+        checkIn: props.dateRange.startDate,
+        checkOut: props.dateRange.endDate,
+        occurredOn: now,
+      })
+    );
+
+    return booking;
+  }
+
+  cancel(): void {
+    if (this.props.status === BookingStatus.CANCELLED) {
+      throw new BookingAlreadyCancelledError(this._id.value);
+    }
+    this.props.status = BookingStatus.CANCELLED;
+    this.props.updatedAt = new Date();
+  }
+
+  get status(): BookingStatus {
+    return this.props.status;
+  }
+}
+```
+
+**Best Practices:**
+- Emit domain events for significant state changes
+- Enforce invariants within the aggregate boundary
+- Operations affecting child entities go through the root
+- Clear domain events after publishing
+
+### Domain Events
+
+Domain events represent something significant that happened in the domain. They enable loose coupling between bounded contexts.
+
+**Base Interface:**
+```typescript
+// src/contexts/shared/domain/domain-event.ts
+export interface DomainEvent {
+  readonly eventName: string;
+  readonly occurredOn: Date;
+  readonly aggregateId: string;
+}
+
+export abstract class BaseDomainEvent implements DomainEvent {
+  abstract readonly eventName: string;
+  readonly occurredOn: Date;
+  readonly aggregateId: string;
+
+  protected constructor(aggregateId: string, occurredOn?: Date) {
+    this.aggregateId = aggregateId;
+    this.occurredOn = occurredOn ?? new Date();
+  }
+}
+```
+
+**Event Example:**
+```typescript
+// src/contexts/bookings/domain/events/booking-created.event.ts
+import { BaseDomainEvent } from "@/shared/domain/domain-event.js";
+
+interface BookingCreatedPayload {
+  bookingId: string;
+  userId: string;
+  roomId: string;
+  checkIn: Date;
+  checkOut: Date;
+  occurredOn?: Date;
+}
+
+export class BookingCreatedEvent extends BaseDomainEvent {
+  static readonly EVENT_NAME = "booking.created";
+  readonly eventName = BookingCreatedEvent.EVENT_NAME;
+
+  readonly userId: string;
+  readonly roomId: string;
+  readonly checkIn: Date;
+  readonly checkOut: Date;
+
+  constructor(payload: BookingCreatedPayload) {
+    super(payload.bookingId, payload.occurredOn);
+    this.userId = payload.userId;
+    this.roomId = payload.roomId;
+    this.checkIn = payload.checkIn;
+    this.checkOut = payload.checkOut;
+  }
+}
+```
+
+### Domain Errors
+
+Domain errors represent business rule violations and exceptional conditions in the domain.
+
+**Base Class:**
+```typescript
+// src/contexts/shared/domain/errors/domain.error.ts
+export abstract class DomainError extends Error {
+  readonly code: string;
+  readonly timestamp: Date;
+
+  protected constructor(message: string, code: string) {
+    super(message);
+    this.name = this.constructor.name;
+    this.code = code;
+    this.timestamp = new Date();
+    Error.captureStackTrace(this, this.constructor);
+  }
+
+  toJSON(): Record<string, unknown> {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      timestamp: this.timestamp.toISOString(),
+    };
+  }
+}
+
+// Common shared errors
+export class InvalidUuidError extends DomainError {
+  constructor(value: string) {
+    super(`Value "${value}" is not a valid UUID`, "INVALID_UUID");
+  }
+}
+
+export class EntityNotFoundError extends DomainError {
+  constructor(entityName: string, id: string) {
+    super(`${entityName} with id "${id}" not found`, "ENTITY_NOT_FOUND");
+  }
+}
+```
+
+**Context-Specific Errors:**
+```typescript
+// src/contexts/bookings/domain/errors/booking.error.ts
+import { DomainError } from "@/shared/domain/errors/domain.error.js";
+
+export class InvalidDateRangeError extends DomainError {
+  constructor(message: string) {
+    super(message, "INVALID_DATE_RANGE");
+  }
+}
+
+export class BookingAlreadyCancelledError extends DomainError {
+  constructor(bookingId: string) {
+    super(`Booking "${bookingId}" is already cancelled`, "BOOKING_ALREADY_CANCELLED");
+  }
+}
+
+export class RoomNotAvailableError extends DomainError {
+  constructor(roomId: string, dateRange: string) {
+    super(`Room "${roomId}" is not available for ${dateRange}`, "ROOM_NOT_AVAILABLE");
+  }
+}
+```
+
+### Repositories
+
+Repositories provide interfaces for accessing aggregates and entities, encapsulating data access logic. In DDD, the interface (port) lives in the domain layer.
+
+**Repository Interface (Port):**
+```typescript
+// src/contexts/bookings/domain/repositories/booking.repository.ts
+import { Uuid } from "@/shared/domain/uuid.js";
+import { Booking } from "../entities/booking.entity.js";
+import { DateRange } from "../value-objects/date-range.vo.js";
+
+export interface FindBookingsFilters {
+  userId?: Uuid;
+  roomId?: Uuid;
+  status?: string;
+}
+
+export interface PaginationOptions {
+  page: number;
+  limit: number;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+}
+
+export interface BookingRepository {
+  findById(id: Uuid): Promise<Booking | null>;
+  findAll(filters?: FindBookingsFilters): Promise<Booking[]>;
+  findPaginated(
+    filters: FindBookingsFilters,
+    pagination: PaginationOptions
+  ): Promise<PaginatedResult<Booking>>;
+  existsOverlapping(roomId: Uuid, dateRange: DateRange): Promise<boolean>;
+  save(booking: Booking): Promise<void>;
+  delete(id: Uuid): Promise<void>;
+}
+```
+
+**Best Practices:**
+- Repository interfaces live in `domain/repositories/`
+- Implementations live in `infrastructure/persistence/`
+- Use dependency injection to inject implementations
+- Repository methods should work with domain objects, not primitives
+
+---
+
+## SOLID and DRY Principles
+
+### Single Responsibility Principle (SRP)
+
+Each class should have a single responsibility or reason to change.
+
+**Good Example:**
+```typescript
+// Entity handles only domain logic
+export class Booking extends AggregateRoot<BookingProps, Uuid> {
+  cancel(): void {
+    // Domain logic only
+  }
+}
+
+// Repository handles only persistence
+export class MongoBookingRepository implements BookingRepository {
+  async save(booking: Booking): Promise<void> {
+    // Persistence logic only
+  }
+}
+
+// Use case orchestrates the operation
+export class CancelBookingUseCase {
+  async execute(input: CancelBookingDto): Promise<BookingResponseDto> {
+    // Orchestration only
+  }
+}
+```
+
+### Open/Closed Principle (OCP)
+
+Software entities should be open for extension but closed for modification.
+
+**Good Example:**
+```typescript
+// Base use case interface allows extension
+export interface UseCase<Input, Output> {
+  execute(input: Input): Promise<Output>;
+}
+
+// New use cases extend without modifying existing code
+export class CreateBookingUseCase implements UseCase<CreateBookingDto, BookingResponseDto> {
+  // Implementation
+}
+
+export class CancelBookingUseCase implements UseCase<CancelBookingDto, BookingResponseDto> {
+  // Implementation
+}
+```
+
+### Liskov Substitution Principle (LSP)
+
+Objects of a derived class should be replaceable with objects of the base class.
+
+**Good Example:**
+```typescript
+// All entities can be treated uniformly
+abstract class Entity<T, IdType> {
+  equals(other?: Entity<T, IdType>): boolean { /* ... */ }
+}
+
+class Room extends Entity<RoomProps, Uuid> { /* ... */ }
+class Booking extends AggregateRoot<BookingProps, Uuid> { /* ... */ }
+
+// Both can be compared using equals()
+```
+
+### Interface Segregation Principle (ISP)
+
+Many specific interfaces are better than a single general interface.
+
+**Good Example:**
+```typescript
+// Specific repository interface per aggregate
+export interface BookingRepository {
+  findById(id: Uuid): Promise<Booking | null>;
+  save(booking: Booking): Promise<void>;
+}
+
+export interface RoomRepository {
+  findById(id: Uuid): Promise<Room | null>;
+  findAvailable(dateRange: DateRange): Promise<Room[]>;
+}
+
+// Generic base for common operations
+export interface Repository<T, IdType> {
+  findById(id: IdType): Promise<T | null>;
+  save(entity: T): Promise<void>;
+}
+```
+
+### Dependency Inversion Principle (DIP)
+
+High-level modules should not depend on low-level modules; both should depend on abstractions.
+
+**Good Example:**
+```typescript
+// Use case depends on abstraction (repository interface)
+export class CreateBookingUseCase {
+  constructor(
+    private readonly bookingRepository: BookingRepository,  // Abstraction
+    private readonly roomRepository: RoomRepository         // Abstraction
+  ) {}
+}
+
+// Infrastructure implements the abstraction
+export class MongoBookingRepository implements BookingRepository {
+  // Implementation details
+}
+```
+
+### DRY (Don't Repeat Yourself)
+
+Each piece of knowledge should have a single, unambiguous, authoritative representation.
+
+**Good Example:**
+```typescript
+// Base classes eliminate duplication
+export abstract class Entity<T, IdType extends Identifier<unknown>> {
+  protected readonly _id: IdType;
+  protected props: T;
+
+  equals(other?: Entity<T, IdType>): boolean {
+    // Single implementation for all entities
+  }
+}
+
+// Shared value objects avoid repetition
+export class Uuid extends Identifier<string> {
+  static generate(): Uuid {
+    return new Uuid(randomUUID());
+  }
+}
+```
+
+---
+
+## Coding Standards
+
+### Naming Conventions
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Entity | `{name}.entity.ts` | `booking.entity.ts` |
+| Value Object | `{name}.vo.ts` | `date-range.vo.ts` |
+| Use Case | `{action}-{entity}.usecase.ts` | `create-booking.usecase.ts` |
+| DTO Input | `{action}-{entity}.dto.ts` | `create-booking.dto.ts` |
+| DTO Response | `{entity}.response.dto.ts` | `booking.response.dto.ts` |
+| Repository (Port) | `{entity}.repository.ts` | `booking.repository.ts` |
+| Repository (Impl) | `mongo-{entity}.repository.ts` | `mongo-booking.repository.ts` |
+| Error | `{context}.error.ts` | `booking.error.ts` |
+| Event | `{entity}-{action}.event.ts` | `booking-created.event.ts` |
+| Fixture | `{entity}.fixture.ts` | `booking.fixture.ts` |
+| Test | `{component}.test.ts` | `booking.entity.test.ts` |
+
+**Code Conventions:**
+```typescript
+// Files and folders: kebab-case
+create-booking.usecase.ts
+
+// Classes and types: PascalCase
+class CreateBookingUseCase {}
+interface BookingRepository {}
+
+// Functions and variables: camelCase
+function createBooking() {}
+const bookingRepository = {};
+
+// Constants: UPPER_SNAKE_CASE
+const MAX_BOOKING_DAYS = 30;
+```
+
+### TypeScript Usage
+
+- **Strict Mode**: Always enable strict mode in `tsconfig.json`
+- **ESM Modules**: Use `"type": "module"` in `package.json`
+- **Explicit Types**: Use explicit types for function parameters and return values
+- **Avoid `any`**: Use `unknown` with type guards instead of `any`
+- **Path Aliases**: Use `@/context/` path aliases for imports
+
+```typescript
+// Good: Explicit types with path aliases
+import { Uuid } from "@/shared/domain/uuid.js";
+
+async function findBookingById(id: Uuid): Promise<Booking | null> {
+  // Implementation
+}
+
+// Avoid: Using any
+function processData(data: any): any {
+  // Bad practice
+}
+```
+
+### Error Handling
+
+- **Domain Errors**: Create domain-specific error classes
+- **Error Codes**: Use meaningful error codes for different error types
+- **toJSON Method**: Implement serialization for API responses
+
+```typescript
+// Throwing domain errors
+if (this.props.status === BookingStatus.CANCELLED) {
+  throw new BookingAlreadyCancelledError(this._id.value);
+}
+
+// Using Either pattern for recoverable errors
+async execute(input: CancelBookingDto): Promise<Either<CancelBookingError, BookingResponseDto>> {
+  const booking = await this.bookingRepository.findById(id);
+  if (!booking) {
+    return left(new BookingNotFoundError(input.bookingId));
+  }
+  return right(BookingMapper.toResponse(booking));
+}
+```
+
+### Validation Patterns
+
+- **Validate in Factory Methods**: Value objects validate in `create()` methods
+- **Fail Fast**: Throw errors immediately on invalid input
+- **Domain Layer Validation**: Business rules validated in domain layer
+
+```typescript
+// Validation in Value Object factory
+static create(startDate: Date, endDate: Date): DateRange {
+  if (startDate >= endDate) {
+    throw new InvalidDateRangeError("Start date must be before end date");
+  }
+  return new DateRange({ startDate, endDate });
+}
+
+// Validation in Entity factory
+static create(props: Omit<RoomProps, "createdAt" | "updatedAt">, id?: Uuid): Room {
+  if (props.pricePerNight.amount <= 0) {
+    throw new InvalidPriceError("Price must be positive");
+  }
+  return new Room(id ?? Uuid.generate(), { ...props });
+}
+```
+
+---
+
+## Application Layer Patterns
+
+### Use Cases
+
+Use cases orchestrate domain operations and handle input/output transformation.
+
+**Use Case Interface:**
+```typescript
+// src/contexts/shared/application/use-case.ts
+export interface UseCase<Input, Output> {
+  execute(input: Input): Promise<Output>;
+}
+
+export interface UseCaseWithResult<Input, Error, Success> {
+  execute(input: Input): Promise<Either<Error, Success>>;
+}
+```
+
+**Use Case Implementation:**
+```typescript
+// src/contexts/bookings/application/use-cases/create-booking.usecase.ts
+import { UseCase } from "@/shared/application/use-case.js";
+import { BookingRepository } from "../../domain/repositories/booking.repository.js";
+import { CreateBookingDto } from "../dtos/create-booking.dto.js";
+import { BookingResponseDto, BookingMapper } from "../dtos/booking.response.dto.js";
+
+export class CreateBookingUseCase implements UseCase<CreateBookingDto, BookingResponseDto> {
+  constructor(
+    private readonly bookingRepository: BookingRepository,
+    private readonly roomRepository: RoomRepository
+  ) {}
+
+  async execute(input: CreateBookingDto): Promise<BookingResponseDto> {
+    const userId = Uuid.fromString(input.userId);
+    const roomId = Uuid.fromString(input.roomId);
+    const dateRange = DateRange.create(
+      new Date(input.checkIn),
+      new Date(input.checkOut)
+    );
+
+    // Verify room availability
+    const room = await this.roomRepository.findById(roomId);
+    if (!room || !room.isAvailable) {
+      throw new RoomNotAvailableError(roomId.value, `${input.checkIn} - ${input.checkOut}`);
+    }
+
+    // Create booking
+    const booking = Booking.create({
+      userId,
+      roomId,
+      dateRange,
+      totalPrice: room.pricePerNight.amount * dateRange.nights,
+    });
+
+    await this.bookingRepository.save(booking);
+
+    return BookingMapper.toResponse(booking);
+  }
+}
+```
+
+### DTOs
+
+DTOs (Data Transfer Objects) define the shape of data crossing layer boundaries.
+
+**Input DTO:**
+```typescript
+// src/contexts/bookings/application/dtos/create-booking.dto.ts
+export interface CreateBookingDto {
+  userId: string;
+  roomId: string;
+  checkIn: string;  // ISO date string
+  checkOut: string; // ISO date string
+}
+```
+
+**Response DTO with Mapper:**
+```typescript
+// src/contexts/bookings/application/dtos/booking.response.dto.ts
+import { Booking } from "../../domain/entities/booking.entity.js";
+
+export interface BookingResponseDto {
+  id: string;
+  userId: string;
+  roomId: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  totalPrice: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export class BookingMapper {
+  static toResponse(booking: Booking): BookingResponseDto {
+    return {
+      id: booking.id.value,
+      userId: booking.userId.value,
+      roomId: booking.roomId.value,
+      checkIn: booking.dateRange.startDate.toISOString(),
+      checkOut: booking.dateRange.endDate.toISOString(),
+      nights: booking.dateRange.nights,
+      totalPrice: booking.totalPrice,
+      status: booking.status,
+      createdAt: booking.createdAt.toISOString(),
+      updatedAt: booking.updatedAt.toISOString(),
+    };
+  }
+
+  static toResponseList(bookings: Booking[]): BookingResponseDto[] {
+    return bookings.map(this.toResponse);
+  }
+}
+```
+
+**Paginated DTO:**
+```typescript
+// src/contexts/shared/application/dtos/paginated.dto.ts
+export interface PaginatedDto<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+```
+
+### Either Pattern for Error Handling
+
+The Either pattern provides explicit error handling without exceptions.
+
+**Either Implementation:**
+```typescript
+// src/contexts/shared/domain/either.ts
+export type Either<L, R> = Left<L, R> | Right<L, R>;
+
+export class Left<L, R> {
+  readonly value: L;
+
+  constructor(value: L) {
+    this.value = value;
+  }
+
+  isLeft(): this is Left<L, R> {
+    return true;
+  }
+
+  isRight(): this is Right<L, R> {
+    return false;
+  }
+
+  fold<U>(onLeft: (value: L) => U, _onRight: (value: R) => U): U {
+    return onLeft(this.value);
+  }
+}
+
+export class Right<L, R> {
+  readonly value: R;
+
+  constructor(value: R) {
+    this.value = value;
+  }
+
+  isLeft(): this is Left<L, R> {
+    return false;
+  }
+
+  isRight(): this is Right<L, R> {
+    return true;
+  }
+
+  fold<U>(_onLeft: (value: L) => U, onRight: (value: R) => U): U {
+    return onRight(this.value);
+  }
+}
+
+export const left = <L, R>(value: L): Either<L, R> => new Left(value);
+export const right = <L, R>(value: R): Either<L, R> => new Right(value);
+```
+
+**Usage in Use Case:**
+```typescript
+type CancelBookingError = BookingNotFoundError | BookingAlreadyCancelledError;
+
+export class CancelBookingUseCase
+  implements UseCaseWithResult<CancelBookingDto, CancelBookingError, BookingResponseDto>
+{
+  async execute(input: CancelBookingDto): Promise<Either<CancelBookingError, BookingResponseDto>> {
+    const booking = await this.bookingRepository.findById(bookingId);
+    if (!booking) {
+      return left(new BookingNotFoundError(input.bookingId));
+    }
+
+    try {
+      booking.cancel();
+    } catch (error) {
+      if (error instanceof BookingAlreadyCancelledError) {
+        return left(error);
+      }
+      throw error;
+    }
+
+    await this.bookingRepository.save(booking);
+    return right(BookingMapper.toResponse(booking));
+  }
+}
+```
+
+**Usage in Controller:**
+```typescript
+const result = await cancelBookingUseCase.execute({ bookingId });
+
+result.fold(
+  (error) => {
+    if (error instanceof BookingNotFoundError) {
+      return res.status(404).json(error.toJSON());
+    }
+    return res.status(400).json(error.toJSON());
+  },
+  (booking) => {
+    return res.status(200).json(booking);
+  }
+);
+```
+
+---
+
+## API Design Standards
+
+### REST Endpoints
+
+- **RESTful Naming**: Use resource-based URLs
+- **HTTP Methods**: Use appropriate methods (GET, POST, PUT, DELETE, PATCH)
+- **Plural Nouns**: Use plural nouns for collections
+
+```typescript
+GET    /bookings              // List bookings
+GET    /bookings/:id          // Get booking by ID
+POST   /bookings              // Create new booking
+PUT    /bookings/:id          // Update booking
+DELETE /bookings/:id          // Delete booking
+PATCH  /bookings/:id/cancel   // Cancel booking
+```
+
+### Request/Response Patterns
+
+```typescript
+// Success response
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "userId": "550e8400-e29b-41d4-a716-446655440001",
+    "status": "CONFIRMED"
+  }
+}
+
+// List response with pagination
+{
+  "data": [...],
+  "meta": {
+    "total": 100,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 10,
+    "hasNextPage": true,
+    "hasPrevPage": false
+  }
+}
+```
+
+### Error Response Format
+
+```typescript
+// 400 Bad Request
+{
+  "name": "InvalidDateRangeError",
+  "message": "Start date must be before end date",
+  "code": "INVALID_DATE_RANGE",
+  "timestamp": "2024-03-01T10:00:00.000Z"
+}
+
+// 404 Not Found
+{
+  "name": "BookingNotFoundError",
+  "message": "Booking with id \"abc-123\" not found",
+  "code": "BOOKING_NOT_FOUND",
+  "timestamp": "2024-03-01T10:00:00.000Z"
+}
+```
+
+---
+
+## Database Patterns
+
+### Repository Pattern
+
+Repository interfaces (ports) define contracts in the domain layer, while implementations (adapters) live in infrastructure.
+
+**Interface (Port):**
+```typescript
+// src/contexts/bookings/domain/repositories/booking.repository.ts
+export interface BookingRepository {
+  findById(id: Uuid): Promise<Booking | null>;
+  findAll(filters?: FindBookingsFilters): Promise<Booking[]>;
+  save(booking: Booking): Promise<void>;
+  delete(id: Uuid): Promise<void>;
+}
+```
+
+### Repository Implementation
+
+**MongoDB Implementation:**
+```typescript
+// src/contexts/bookings/infrastructure/persistence/mongo-booking.repository.ts
+import { Collection, Db } from "mongodb";
+import { BookingRepository } from "../../domain/repositories/booking.repository.js";
+
+interface BookingDocument {
+  _id: string;
+  userId: string;
+  roomId: string;
+  checkIn: Date;
+  checkOut: Date;
+  status: string;
+  totalPrice: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class MongoBookingRepository implements BookingRepository {
+  private collection: Collection<BookingDocument>;
+
+  constructor(db: Db) {
+    this.collection = db.collection<BookingDocument>("bookings");
+  }
+
+  async findById(id: Uuid): Promise<Booking | null> {
+    const doc = await this.collection.findOne({ _id: id.value });
+    return doc ? this.toDomain(doc) : null;
+  }
+
+  async save(booking: Booking): Promise<void> {
+    const doc = this.toPersistence(booking);
+    await this.collection.updateOne(
+      { _id: doc._id },
+      { $set: doc },
+      { upsert: true }
+    );
+  }
+
+  private toDomain(doc: BookingDocument): Booking {
+    return Booking.reconstitute(
+      Uuid.fromString(doc._id),
+      {
+        userId: Uuid.fromString(doc.userId),
+        roomId: Uuid.fromString(doc.roomId),
+        dateRange: DateRange.create(doc.checkIn, doc.checkOut),
+        status: doc.status as BookingStatus,
+        totalPrice: doc.totalPrice,
+        createdAt: doc.createdAt,
+        updatedAt: doc.updatedAt,
+      }
+    );
+  }
+
+  private toPersistence(booking: Booking): BookingDocument {
+    return {
+      _id: booking.id.value,
+      userId: booking.userId.value,
+      roomId: booking.roomId.value,
+      checkIn: booking.dateRange.startDate,
+      checkOut: booking.dateRange.endDate,
+      status: booking.status,
+      totalPrice: booking.totalPrice,
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
+    };
+  }
+}
+```
+
+---
+
+## Testing Standards
+
+### Test File Structure
+
+```
+tests/
+├── contexts/
+│   ├── shared/
+│   │   └── domain/
+│   │       ├── uuid.test.ts
+│   │       └── either.test.ts
+│   │
+│   └── bookings/
+│       ├── domain/
+│       │   ├── entities/
+│       │   │   └── booking.entity.test.ts
+│       │   └── value-objects/
+│       │       └── date-range.vo.test.ts
+│       ├── application/
+│       │   └── use-cases/
+│       │       └── create-booking.usecase.test.ts
+│       ├── fixtures/
+│       │   └── booking.fixture.ts
+│       └── mocks/
+│           └── booking.repository.mock.ts
+│
+└── setup.ts
+```
+
+### Test Organization Pattern
+
+Use descriptive `describe` blocks with AAA pattern (Arrange-Act-Assert):
+
+```typescript
+describe("Booking Entity", () => {
+  describe("create", () => {
+    it("should create a booking with PENDING status", () => {
+      // Given (Arrange)
+      const props = BookingFixture.validCreateProps();
+
+      // When (Act)
+      const booking = Booking.create(props);
+
+      // Then (Assert)
+      expect(booking.status).toBe(BookingStatus.PENDING);
+    });
+  });
+});
+```
+
+### Tests for Entities
+
+```typescript
+// tests/contexts/bookings/domain/entities/booking.entity.test.ts
+import { describe, it, expect } from "vitest";
+import { Booking } from "@/bookings/domain/entities/booking.entity.js";
+import { BookingStatus } from "@/bookings/domain/value-objects/booking-status.vo.js";
+import { BookingAlreadyCancelledError } from "@/bookings/domain/errors/booking.error.js";
+import { BookingFixture } from "../../fixtures/booking.fixture.js";
+
+describe("Booking Entity", () => {
+  describe("create", () => {
+    it("should create a booking with PENDING status", () => {
+      // Given
+      const props = BookingFixture.validCreateProps();
+
+      // When
+      const booking = Booking.create(props);
+
+      // Then
+      expect(booking.status).toBe(BookingStatus.PENDING);
+    });
+
+    it("should emit BookingCreatedEvent when created", () => {
+      // Given
+      const props = BookingFixture.validCreateProps();
+
+      // When
+      const booking = Booking.create(props);
+
+      // Then
+      expect(booking.domainEvents).toHaveLength(1);
+    });
+  });
+
+  describe("cancel", () => {
+    it("should change status to CANCELLED", () => {
+      // Given
+      const booking = BookingFixture.pending();
+
+      // When
+      booking.cancel();
+
+      // Then
+      expect(booking.status).toBe(BookingStatus.CANCELLED);
+    });
+
+    it("should throw when already cancelled", () => {
+      // Given
+      const booking = BookingFixture.cancelled();
+
+      // When/Then
+      expect(() => booking.cancel()).toThrow(BookingAlreadyCancelledError);
+    });
+  });
+});
+```
+
+### Tests for Value Objects
+
+```typescript
+// tests/contexts/bookings/domain/value-objects/date-range.vo.test.ts
+import { describe, it, expect } from "vitest";
+import { DateRange } from "@/bookings/domain/value-objects/date-range.vo.js";
+import { InvalidDateRangeError } from "@/bookings/domain/errors/booking.error.js";
+
+describe("DateRange Value Object", () => {
+  describe("create", () => {
+    it("should create a valid date range", () => {
+      // Given
+      const startDate = new Date("2024-03-01");
+      const endDate = new Date("2024-03-05");
+
+      // When
+      const dateRange = DateRange.create(startDate, endDate);
+
+      // Then
+      expect(dateRange.startDate).toEqual(startDate);
+      expect(dateRange.endDate).toEqual(endDate);
+    });
+
+    it("should throw when start date is after end date", () => {
+      // Given
+      const startDate = new Date("2024-03-05");
+      const endDate = new Date("2024-03-01");
+
+      // When/Then
+      expect(() => DateRange.create(startDate, endDate)).toThrow(InvalidDateRangeError);
+    });
+  });
+
+  describe("nights", () => {
+    it("should calculate correct number of nights", () => {
+      // Given
+      const dateRange = DateRange.create(
+        new Date("2024-03-01"),
+        new Date("2024-03-05")
+      );
+
+      // When/Then
+      expect(dateRange.nights).toBe(4);
+    });
+  });
+
+  describe("overlaps", () => {
+    it("should detect overlapping ranges", () => {
+      // Given
+      const range1 = DateRange.create(new Date("2024-03-01"), new Date("2024-03-10"));
+      const range2 = DateRange.create(new Date("2024-03-05"), new Date("2024-03-15"));
+
+      // When/Then
+      expect(range1.overlaps(range2)).toBe(true);
+    });
+  });
+});
+```
+
+### Tests for Use Cases
+
+```typescript
+// tests/contexts/bookings/application/use-cases/create-booking.usecase.test.ts
+import { describe, it, expect, beforeEach } from "vitest";
+import { CreateBookingUseCase } from "@/bookings/application/use-cases/create-booking.usecase.js";
+import { RoomNotAvailableError } from "@/bookings/domain/errors/booking.error.js";
+import { MockBookingRepository } from "../../mocks/booking.repository.mock.js";
+import { MockRoomRepository } from "@/test/contexts/rooms/mocks/room.repository.mock.js";
+import { RoomFixture } from "@/test/contexts/rooms/fixtures/room.fixture.js";
+
+describe("CreateBookingUseCase", () => {
+  let useCase: CreateBookingUseCase;
+  let bookingRepository: MockBookingRepository;
+  let roomRepository: MockRoomRepository;
+
+  beforeEach(() => {
+    bookingRepository = new MockBookingRepository();
+    roomRepository = new MockRoomRepository();
+    useCase = new CreateBookingUseCase(bookingRepository, roomRepository);
+  });
+
+  it("should create a booking when room is available", async () => {
+    // Given
+    const room = RoomFixture.available();
+    roomRepository.setFindByIdResult(room);
+    bookingRepository.setExistsOverlappingResult(false);
+
+    const input = {
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      roomId: room.id.value,
+      checkIn: "2024-03-01",
+      checkOut: "2024-03-05",
+    };
+
+    // When
+    const result = await useCase.execute(input);
+
+    // Then
+    expect(result.id).toBeDefined();
+    expect(result.status).toBe("PENDING");
+    expect(bookingRepository.saveCalled).toBe(true);
+  });
+
+  it("should throw RoomNotAvailableError when room is not available", async () => {
+    // Given
+    const room = RoomFixture.unavailable();
+    roomRepository.setFindByIdResult(room);
+
+    const input = {
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      roomId: room.id.value,
+      checkIn: "2024-03-01",
+      checkOut: "2024-03-05",
+    };
+
+    // When/Then
+    await expect(useCase.execute(input)).rejects.toThrow(RoomNotAvailableError);
+  });
+});
+```
+
+### Fixtures and Object Mothers
+
+```typescript
+// tests/contexts/bookings/fixtures/booking.fixture.ts
+import { Uuid } from "@/shared/domain/uuid.js";
+import { Booking } from "@/bookings/domain/entities/booking.entity.js";
+import { BookingStatus } from "@/bookings/domain/value-objects/booking-status.vo.js";
+import { DateRangeFixture } from "./date-range.fixture.js";
+
+export class BookingFixture {
+  static readonly DEFAULT_USER_ID = "550e8400-e29b-41d4-a716-446655440001";
+  static readonly DEFAULT_ROOM_ID = "550e8400-e29b-41d4-a716-446655440002";
+
+  static validCreateProps(overrides?: Partial<{
+    userId: Uuid;
+    roomId: Uuid;
+    totalPrice: number;
+  }>) {
+    return {
+      userId: overrides?.userId ?? Uuid.fromString(this.DEFAULT_USER_ID),
+      roomId: overrides?.roomId ?? Uuid.fromString(this.DEFAULT_ROOM_ID),
+      dateRange: DateRangeFixture.nextWeek(),
+      totalPrice: overrides?.totalPrice ?? 400,
+    };
+  }
+
+  static pending(): Booking {
+    const booking = Booking.create(this.validCreateProps());
+    booking.clearDomainEvents();
+    return booking;
+  }
+
+  static confirmed(): Booking {
+    const booking = this.pending();
+    booking.confirm();
+    return booking;
+  }
+
+  static cancelled(): Booking {
+    return Booking.reconstitute(
+      Uuid.fromString("550e8400-e29b-41d4-a716-446655440003"),
+      {
+        userId: Uuid.fromString(this.DEFAULT_USER_ID),
+        roomId: Uuid.fromString(this.DEFAULT_ROOM_ID),
+        dateRange: DateRangeFixture.nextWeek(),
+        status: BookingStatus.CANCELLED,
+        totalPrice: 400,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    );
+  }
+}
+```
+
+### Repository Mocks
+
+```typescript
+// tests/contexts/bookings/mocks/booking.repository.mock.ts
+import { Uuid } from "@/shared/domain/uuid.js";
+import { Booking } from "@/bookings/domain/entities/booking.entity.js";
+import { BookingRepository } from "@/bookings/domain/repositories/booking.repository.js";
+
+export class MockBookingRepository implements BookingRepository {
+  private findByIdResult: Booking | null = null;
+  private existsOverlappingResult = false;
+  
+  // Tracking calls
+  saveCalled = false;
+  savedBooking: Booking | null = null;
+
+  // Setup methods
+  setFindByIdResult(booking: Booking | null): void {
+    this.findByIdResult = booking;
+  }
+
+  setExistsOverlappingResult(exists: boolean): void {
+    this.existsOverlappingResult = exists;
+  }
+
+  reset(): void {
+    this.findByIdResult = null;
+    this.existsOverlappingResult = false;
+    this.saveCalled = false;
+    this.savedBooking = null;
+  }
+
+  // Implementation
+  async findById(_id: Uuid): Promise<Booking | null> {
+    return this.findByIdResult;
+  }
+
+  async save(booking: Booking): Promise<void> {
+    this.saveCalled = true;
+    this.savedBooking = booking;
+  }
+
+  // ... other methods
+}
+```
+
+---
+
+## Path Aliases Configuration
+
+### tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@/shared/*": ["src/contexts/shared/*"],
+      "@/bookings/*": ["src/contexts/bookings/*"],
+      "@/rooms/*": ["src/contexts/rooms/*"],
+      "@/test/*": ["tests/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+### vitest.config.ts
+
+```typescript
+import { defineConfig } from "vitest/config";
+import { resolve } from "path";
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: "node",
+    include: ["tests/**/*.{test,spec}.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+      include: ["src/**/*.ts"],
+      exclude: ["src/**/*.dto.ts", "src/**/index.ts"]
+    }
+  },
+  resolve: {
+    alias: {
+      "@/shared": resolve(__dirname, "src/contexts/shared"),
+      "@/bookings": resolve(__dirname, "src/contexts/bookings"),
+      "@/rooms": resolve(__dirname, "src/contexts/rooms"),
+      "@/test": resolve(__dirname, "tests")
+    }
+  }
+});
+```
+
+---
+
+## Development Workflow
+
+### Git Workflow
+
+- **Feature Branches**: Develop features in separate branches with descriptive names
+- **Descriptive Commits**: Write descriptive commit messages in English
+- **Code Review**: Code review required before merging
+
+### Code Quality
+
+Scripts disponibles:
+
+```bash
+# Development
+npm run dev          # Start development server with hot-reload
+
+# Build
+npm run build        # Compile TypeScript to JavaScript
+
+# Testing
+npm test             # Run all tests
+npm run test:watch   # Run tests in watch mode
+npm run test:coverage # Generate coverage report
+
+# Linting
+npm run lint         # Run Biome linter
+npm run format       # Format code with Biome
+npm run check        # Run lint + format check
+```
+
+### Validation Checklist
+
+```markdown
+## Configuration
+[ ] package.json with type: "module" and correct scripts
+[ ] tsconfig.json with strict: true, ESM and path aliases
+[ ] biome.json configured
+[ ] vitest.config.ts with resolved aliases
+[ ] README.md with complete development guide
+
+## Structure per Bounded Context
+[ ] domain/ folder with entities, value-objects, repositories, errors, events
+[ ] application/ folder with use-cases and dtos
+[ ] infrastructure/ folder when there are implementations
+
+## Shared Building Blocks
+[ ] Entity base class
+[ ] ValueObject base class
+[ ] AggregateRoot base class
+[ ] DomainEvent interface
+[ ] Either/Result pattern
+[ ] DomainError base class
+[ ] UseCase interface
+
+## Code
+[ ] Imports use path aliases (@/context/*)
+[ ] No use of 'any' - use unknown + type guards
+[ ] Entities extend Entity or AggregateRoot
+[ ] Value Objects extend ValueObject
+[ ] Repositories are interfaces (ports) in domain/
+[ ] Use cases implement UseCase interface
+[ ] DTOs are plain types/interfaces
+[ ] Errors extend DomainError
+
+## Tests
+[ ] Mirror structure in tests/contexts/
+[ ] Fixtures per entity
+[ ] Naming: *.test.ts or *.spec.ts
+
+## Dependency Rule
+[ ] domain/ DOES NOT import from application/ or infrastructure/
+[ ] application/ can import from domain/
+[ ] infrastructure/ can import from domain/ and application/
+```
+
+### Verification Commands
+
+```bash
+# Verify compilation
+npm run build
+
+# Verify linting
+npm run lint
+
+# Run tests
+npm test
+
+# Verify types
+npx tsc --noEmit
+```
