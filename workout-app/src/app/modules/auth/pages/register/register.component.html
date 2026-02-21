@@ -1,0 +1,176 @@
+<header class="auth-header">
+  <a routerLink="/auth/login">Workout Tracker</a>
+</header>
+
+<div class="auth-body">
+  <div class="auth-card">
+    <h1>Create your account</h1>
+    <p class="subtitle">Start tracking your workouts and reach your fitness goals.</p>
+
+    <!-- Success alert -->
+    @if (alertType === 'success') {
+      <div class="alert alert-success" role="status" data-testid="alert-success">
+        <span class="alert-icon" aria-hidden="true">&#10003;</span>
+        <div>
+          <strong>Account created!</strong> You can now
+          <a routerLink="/auth/login">sign in</a> with your credentials.
+        </div>
+      </div>
+    }
+
+    <!-- Conflict alert (409) -->
+    @if (alertType === 'conflict') {
+      <div class="alert alert-error" role="alert" data-testid="alert-conflict">
+        <span class="alert-icon" aria-hidden="true">&#10007;</span>
+        <div>
+          <strong>Email already registered.</strong> Try
+          <a routerLink="/auth/login">signing in</a> or use a different email.
+        </div>
+      </div>
+    }
+
+    <!-- Validation alert (400) -->
+    @if (alertType === 'validation') {
+      <div class="alert alert-error" role="alert" data-testid="alert-validation">
+        <span class="alert-icon" aria-hidden="true">&#10007;</span>
+        <div><strong>Invalid data.</strong> Please check the fields below.</div>
+      </div>
+    }
+
+    <!-- Offline alert -->
+    @if (alertType === 'offline') {
+      <div class="alert alert-warning" role="alert" data-testid="alert-offline">
+        <span class="alert-icon" aria-hidden="true">&#9888;</span>
+        <div><strong>No connection.</strong> Please check your network and try again.</div>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Name field -->
+      <div class="form-group">
+        <label class="form-label" for="fieldName">Full name</label>
+        <div class="input-wrap">
+          <input
+            id="fieldName"
+            class="form-input"
+            type="text"
+            placeholder="Juan Pérez"
+            autocomplete="name"
+            formControlName="name"
+            [class.has-error]="form.get('name')?.invalid && form.get('name')?.touched"
+            [class.has-success]="form.get('name')?.valid && form.get('name')?.touched"
+            data-testid="field-name"
+          />
+        </div>
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+          <div class="field-error visible" role="alert">Name is required.</div>
+        }
+        @if (form.get('name')?.hasError('minlength') && form.get('name')?.touched) {
+          <div class="field-error visible" role="alert">Name must be at least 2 characters.</div>
+        }
+      </div>
+
+      <!-- Email field -->
+      <div class="form-group">
+        <label class="form-label" for="fieldEmail">Email</label>
+        <div class="input-wrap">
+          <input
+            id="fieldEmail"
+            class="form-input"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            formControlName="email"
+            [class.has-error]="form.get('email')?.invalid && form.get('email')?.touched"
+            [class.has-success]="form.get('email')?.valid && form.get('email')?.touched"
+            data-testid="field-email"
+          />
+        </div>
+        @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+          <div class="field-error visible" role="alert">Email is required.</div>
+        }
+        @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <div class="field-error visible" role="alert">Please enter a valid email address.</div>
+        }
+      </div>
+
+      <!-- Password field -->
+      <div class="form-group">
+        <label class="form-label" for="fieldPassword">Password</label>
+        <div class="input-wrap">
+          <input
+            id="fieldPassword"
+            class="form-input input-password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Minimum 8 characters"
+            autocomplete="new-password"
+            formControlName="password"
+            [class.has-error]="form.get('password')?.invalid && form.get('password')?.touched"
+            [class.has-success]="form.get('password')?.valid && form.get('password')?.touched"
+            data-testid="field-password"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            (click)="togglePasswordVisibility()"
+            data-testid="toggle-password"
+          >
+            <span aria-hidden="true">&#128065;</span>
+          </button>
+        </div>
+        @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+          <div class="field-error visible" role="alert">Password is required.</div>
+        }
+        @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+          <div class="field-error visible" role="alert">
+            Password must be at least 8 characters.
+          </div>
+        }
+
+        <!-- Password strength indicator -->
+        @if (form.get('password')?.value) {
+          <div class="password-strength" data-testid="strength-bars">
+            @for (i of [0, 1, 2, 3]; track i) {
+              <div
+                class="strength-bar"
+                [class.filled-weak]="i < strengthScore && passwordStrength === 'weak'"
+                [class.filled-medium]="i < strengthScore && passwordStrength === 'medium'"
+                [class.filled-strong]="i < strengthScore && passwordStrength === 'strong'"
+              ></div>
+            }
+          </div>
+          <div
+            class="strength-label"
+            [class.weak]="passwordStrength === 'weak'"
+            [class.medium]="passwordStrength === 'medium'"
+            [class.strong]="passwordStrength === 'strong'"
+            data-testid="strength-label"
+          >
+            @switch (passwordStrength) {
+              @case ('weak') { Weak }
+              @case ('medium') { Fair }
+              @case ('strong') { Strong }
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Submit button -->
+      <button
+        class="btn-submit"
+        type="submit"
+        [disabled]="isLoading || registrationSuccess"
+        [class.loading]="isLoading"
+        data-testid="submit-btn"
+      >
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Create account</span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a routerLink="/auth/login">Sign in</a>
+    </div>
+  </div>
+</div>
