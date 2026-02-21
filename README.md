@@ -108,6 +108,10 @@ npm install
 cp .env.example .env
 # Editar .env con tu configuración
 
+# Base de datos (PostgreSQL con Prisma)
+docker compose up -d
+npm run prisma:migrate
+
 # Modo desarrollo (recarga automática)
 npm run dev
 
@@ -123,7 +127,9 @@ npm start
 | Script | Descripción |
 |--------|-------------|
 | `npm run dev` | Inicia el servidor de desarrollo con hot-reload |
-| `npm run build` | Compila TypeScript |
+| `npm run build` | Genera Prisma Client y compila TypeScript |
+| `npm run prisma:generate` | Genera el cliente Prisma |
+| `npm run prisma:migrate` | Ejecuta migraciones en desarrollo |
 | `npm start` | Ejecuta la versión compilada |
 | `npm test` | Ejecuta los tests |
 | `npm run test:coverage` | Ejecuta tests con cobertura |

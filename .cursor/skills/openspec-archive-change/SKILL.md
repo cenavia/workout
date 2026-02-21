@@ -82,7 +82,16 @@ Archive a completed change in the experimental workflow.
    mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
    ```
 
-6. **Display summary**
+6. **Commit changes locally**
+
+   Stage and commit all changes (archive move, main specs sync) with a descriptive message. Do NOT push to remote.
+
+   ```bash
+   git add -A
+   git commit -m "chore(openspec): archive change <name>"
+   ```
+
+7. **Display summary**
 
    Show archive completion summary including:
    - Change name
@@ -90,6 +99,7 @@ Archive a completed change in the experimental workflow.
    - Archive location
    - Whether specs were synced (if applicable)
    - Note about any warnings (incomplete artifacts/tasks)
+   - That a local commit was created (push is manual)
 
 **Output On Success**
 
@@ -100,12 +110,14 @@ Archive a completed change in the experimental workflow.
 **Schema:** <schema-name>
 **Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** ✓ Synced to main specs (or "No delta specs" or "Sync skipped")
+**Git:** ✓ Local commit created (push manually when ready)
 
 All artifacts complete. All tasks complete.
 ```
 
 **Guardrails**
 - Always prompt for change selection if not provided
+- NEVER run `git push`; the user pushes to GitHub manually
 - Use artifact graph (openspec status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
 - Preserve .openspec.yaml when moving to archive (it moves with the directory)

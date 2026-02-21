@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "prisma generate && tsc && tsc-alias",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "test": "vitest",
@@ -11,12 +11,17 @@
     "test:coverage": "vitest --coverage",
     "lint": "biome lint ./src ./tests",
     "format": "biome format --write ./src ./tests",
-    "check": "biome check ./src ./tests"
+    "check": "biome check ./src ./tests",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "express": "^4.21.0",
+    "prisma": "^6.19.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
