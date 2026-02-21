@@ -13,7 +13,12 @@ alwaysApply: true
 - **Question Assumptions**: Always question assumptions and inferences.
 - **Pattern Detection**: Detect and highlight repeated code patterns.
 
-## 2. Language Standards
+## 2. Git Workflow
+
+- **Branch first**: Always create a feature branch before starting development on an OpenSpec change or any feature. Use `feature/<change-name>` (e.g. `feature/auth-register-end-to-end`). Never implement directly on `main`.
+- **Conventional commits**: Use conventional commit messages in English (e.g. `feat(auth): add register endpoint`).
+
+## 3. Language Standards
 - **English Only**: All technical artifacts must always use English, including:
     - Code (variables, functions, classes, comments, error messages, log messages)
     - Documentation (README, guides, API docs)
@@ -23,7 +28,7 @@ alwaysApply: true
     - Git commit messages
     - Test names and descriptions
 
-## 3. Specific standards
+## 4. Specific standards
 
 For detailed standards and guidelines specific to different areas of the project, refer to:
 

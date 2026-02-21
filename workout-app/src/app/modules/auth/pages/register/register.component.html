@@ -1,0 +1,101 @@
+<div class="auth-page">
+  <header class="auth-header">
+    <a routerLink="/">Workout Tracker</a>
+  </header>
+
+  <div class="auth-body">
+    <div class="auth-card">
+      <h1>Create your account</h1>
+      <p class="subtitle">Start tracking your workouts and reach your fitness goals.</p>
+
+      <div *ngIf="activeAlert === 'success'" class="alert alert-success" role="status">
+        <span class="alert-icon" aria-hidden="true">&#10003;</span>
+        <div><strong>Account created!</strong> You can now <a routerLink="/auth/login">sign in</a> with your credentials.</div>
+      </div>
+
+      <div *ngIf="activeAlert === 'conflict'" class="alert alert-error" role="alert">
+        <span class="alert-icon" aria-hidden="true">&#10007;</span>
+        <div><strong>Email already registered.</strong> Try <a routerLink="/auth/login">signing in</a> or use a different email.</div>
+      </div>
+
+      <div *ngIf="activeAlert === 'validation'" class="alert alert-error" role="alert">
+        <span class="alert-icon" aria-hidden="true">&#10007;</span>
+        <div><strong>Invalid data.</strong> <span *ngIf="validationDetails.length">{{ validationDetails.join('. ') }}</span><span *ngIf="!validationDetails.length">Please check the fields below.</span></div>
+      </div>
+
+      <div *ngIf="activeAlert === 'offline'" class="alert alert-warning" role="alert">
+        <span class="alert-icon" aria-hidden="true">&#9888;</span>
+        <div><strong>No connection.</strong> Please check your network and try again.</div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label class="form-label" for="fieldName">Full name</label>
+          <div class="input-wrap">
+            <input
+              id="fieldName"
+              class="form-input"
+              [class.has-error]="hasError('name')"
+              [class.has-success]="getErrorClass('name') === 'has-success'"
+              type="text"
+              formControlName="name"
+              placeholder="Juan Pérez"
+              autocomplete="name"
+            />
+          </div>
+          <div *ngIf="hasError('name')" class="field-error visible" role="alert">Name must be at least 2 characters.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fieldEmail">Email</label>
+          <div class="input-wrap">
+            <input
+              id="fieldEmail"
+              class="form-input"
+              [class.has-error]="hasError('email')"
+              [class.has-success]="getErrorClass('email') === 'has-success'"
+              type="email"
+              formControlName="email"
+              placeholder="you&#64;example.com"
+              autocomplete="email"
+            />
+          </div>
+          <div *ngIf="hasError('email')" class="field-error visible" role="alert">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fieldPassword">Password</label>
+          <div class="input-wrap">
+            <input
+              id="fieldPassword"
+              class="form-input input-password"
+              [class.has-error]="hasError('password')"
+              [class.has-success]="getErrorClass('password') === 'has-success'"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Minimum 8 characters"
+              autocomplete="new-password"
+            />
+            <button type="button" class="toggle-password" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'" (click)="togglePassword()">
+              <span aria-hidden="true">{{ showPassword ? '&#128064;' : '&#128065;' }}</span>
+            </button>
+          </div>
+          <div *ngIf="hasError('password')" class="field-error visible" role="alert">Password must be at least 8 characters.</div>
+          <div class="password-strength">
+            <div *ngFor="let i of [0,1,2,3]" class="strength-bar" [class.filled-weak]="i < passwordStrength.score && passwordStrength.label === 'Weak'" [class.filled-medium]="i < passwordStrength.score && passwordStrength.label === 'Fair'" [class.filled-strong]="i < passwordStrength.score && passwordStrength.label === 'Strong'"></div>
+          </div>
+          <div *ngIf="form.get('password')?.value" class="strength-label" [class.weak]="passwordStrength.label === 'Weak'" [class.medium]="passwordStrength.label === 'Fair'" [class.strong]="passwordStrength.label === 'Strong'">{{ passwordStrength.label }}</div>
+        </div>
+
+        <button class="btn-submit" type="submit" [disabled]="isLoading" [class.loading]="isLoading">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Create account</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a routerLink="/auth/login">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>

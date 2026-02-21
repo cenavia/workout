@@ -16,3 +16,9 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+/** WT-001 register API response (no tokens) */
+export interface RegisterResponse {
+  message: string;
+  user: User;
+}

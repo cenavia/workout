@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { User } from '@models/user.model';
-import { LoginDto, RegisterDto, AuthResponse } from '@models/auth.model';
+import { LoginDto, RegisterDto, AuthResponse, RegisterResponse } from '@models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,11 @@ export class AuthService {
         this._user$.next(response.user);
       })
     );
+  }
+
+  /** Registers user via WT-001 API (returns message + user, no tokens). Redirect to login on success. */
+  registerAccount(data: RegisterDto): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, data);
   }
 
   logout(): void {
