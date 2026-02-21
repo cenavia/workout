@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Tracker | Dashboard</title>
+  <style>
+    body { background: #FAFAFA; color: #000000; font-family: "Inter", "Helvetica Neue", Arial, sans-serif; }
+    .app-shell { visibility: visible; }
+  </style>
+  <link rel="preload" href="./styles/app.css" as="style" />
+  <link rel="stylesheet" href="./styles/tokens.css" />
+  <link rel="stylesheet" href="./styles/app.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="./styles/app.css" /></noscript>
+</head>
+<body>
+  <div class="app-layout app-shell">
+    <header class="app-header">
+      <div class="brand">Workout Tracker</div>
+      <nav class="header-nav" aria-label="Primary">
+        <a class="active" href="./index.html">Dashboard</a>
+        <a href="./workouts.html">Workouts</a>
+        <a href="./calendar.html">Calendar</a>
+        <a href="./reports.html">Reports</a>
+        <a href="./exercises.html">Exercises</a>
+        <a href="./coach.html">AI Coach</a>
+      </nav>
+      <div class="header-actions">
+        <button class="menu-toggle focusable" aria-label="Toggle sidebar menu" aria-controls="appSidebar" aria-expanded="false">
+          <span aria-hidden="true">&#9776;</span>
+        </button>
+        <button class="btn btn-ghost focusable header-user" aria-label="Open user menu">JD</button>
+      </div>
+    </header>
+    <button class="mobile-overlay" type="button" aria-label="Close sidebar menu"></button>
+
+    <div class="app-body">
+      <aside id="appSidebar" class="app-sidebar" aria-label="Sidebar">
+        <a class="sidebar-link active" href="./index.html">Dashboard</a>
+        <a class="sidebar-link" href="./workouts.html">Workouts</a>
+        <a class="sidebar-link" href="./calendar.html">Calendar</a>
+        <a class="sidebar-link" href="./reports.html">Reports</a>
+        <a class="sidebar-link" href="./exercises.html">Exercises</a>
+        <a class="sidebar-link" href="./coach.html">AI Coach</a>
+      </aside>
+
+      <main class="app-main">
+        <div class="container">
+          <h1 class="page-title">Dashboard Principal</h1>
+          <p class="page-description">
+            Resumen de actividad, métricas destacadas, acceso rápido y notificaciones según PRD sección 5.2.1.
+          </p>
+
+          <section class="cards-grid" aria-label="Resumen de métricas">
+            <article class="card">
+              <h2>Entrenamientos de la semana</h2>
+              <p>4 de 5 sesiones completadas</p>
+              <span class="pill pill-success">Racha activa: 12 días</span>
+            </article>
+            <article class="card">
+              <h2>Próximo entrenamiento</h2>
+              <p>Piernas - hoy 18:00</p>
+              <span class="pill pill-info">Recordatorio inteligente</span>
+            </article>
+            <article class="card">
+              <h2>Tip del día</h2>
+              <p>Mantén descansos de 60-90s en accesorios para hipertrofia.</p>
+              <span class="pill pill-warning">Coach insight</span>
+            </article>
+          </section>
+
+          <section class="card" style="margin-top: 24px;" aria-label="Acciones rápidas">
+            <h2>Acceso rápido</h2>
+            <div class="button-row">
+              <button class="btn btn-primary">Iniciar entrenamiento</button>
+              <button class="btn btn-secondary">Abrir calendario</button>
+              <button class="btn btn-accent">Chat con Workout Coach</button>
+            </div>
+            <!-- [COMPONENTE: Acciones rápidas — ver PRD sección 5.2.1] -->
+          </section>
+
+          <section class="panel-split" style="margin-top: 24px;">
+            <article class="status status-loading" aria-busy="true">
+              <h3>Estado de carga (skeleton)</h3>
+              <div data-skeleton></div>
+              <div data-skeleton style="width: 75%;"></div>
+              <div data-skeleton style="width: 55%;"></div>
+            </article>
+
+            <article class="status status-empty">
+              <h3>Estado vacío</h3>
+              <p>Todavía no hay notificaciones nuevas ni logros recientes.</p>
+            </article>
+
+            <article class="status status-error" role="alert">
+              <h3>Error</h3>
+              <p>No fue posible cargar las métricas de progreso.</p>
+            </article>
+
+            <article class="status status-offline">
+              <h3>Sin conexión</h3>
+              <p>Trabajando en modo local. Las acciones se sincronizarán al reconectar.</p>
+            </article>
+          </section>
+
+          <section class="card" style="margin-top: 24px;">
+            <h2>Estado con datos</h2>
+            <ul class="metric-list">
+              <li>Volumen semanal: 21,450 kg</li>
+              <li>Tiempo entrenado: 3h 40m</li>
+              <li>Objetivo de adherencia: 80%</li>
+            </ul>
+            <img
+              src="https://via.placeholder.com/640x240?text=Workout+Progress+Preview"
+              loading="lazy"
+              alt="Vista previa decorativa de progreso semanal"
+              style="margin-top: 16px; width: 100%; border-radius: 12px; border: 1px solid #E0E0E0;"
+            />
+            <!-- [COMPONENTE: Notificaciones y logros — ver PRD sección 5.2.1] -->
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const layout = document.querySelector(".app-layout");
+      const toggle = document.querySelector(".menu-toggle");
+      const overlay = document.querySelector(".mobile-overlay");
+      const links = document.querySelectorAll(".sidebar-link");
+
+      if (!layout || !toggle || !overlay) return;
+
+      const closeMenu = function () {
+        layout.classList.remove("menu-open");
+        toggle.setAttribute("aria-expanded", "false");
+      };
+
+      const openMenu = function () {
+        layout.classList.add("menu-open");
+        toggle.setAttribute("aria-expanded", "true");
+      };
+
+      toggle.addEventListener("click", function () {
+        if (layout.classList.contains("menu-open")) {
+          closeMenu();
+          return;
+        }
+        openMenu();
+      });
+
+      overlay.addEventListener("click", closeMenu);
+      links.forEach(function (link) {
+        link.addEventListener("click", closeMenu);
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 768) closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+:root {
+  /* Primary colors */
+  --color-white: #FFFFFF;
+  --color-primary-500: #1E88E5;
+  --color-primary-400: #4FA3EC;
+  --color-primary-300: #90CAF9;
+  --color-primary-200: #BBDEFB;
+  --color-primary-100: #E3F2FD;
+  --color-primary-600: #1565C0;
+  --color-primary-700: #0D47A1;
+  --color-secondary-500: #4CAF50;
+  --color-secondary-400: #6FBF73;
+  --color-secondary-300: #A5D6A7;
+  --color-secondary-200: #C8E6C9;
+  --color-secondary-100: #E8F5E9;
+
+  /* Accent colors */
+  --color-black: #000000;
+  --color-accent-500: #FF6B35;
+  --color-accent-400: #FF8859;
+  --color-accent-300: #FFAB91;
+  --color-accent-200: #FFCCBC;
+  --color-accent-100: #FBE9E7;
+
+  /* Signal colors */
+  --color-error: #F44336;
+  --color-error-light: #FFEBEE;
+  --color-warning: #FFC107;
+  --color-warning-light: #FFF8E1;
+  --color-success: #4CAF50;
+  --color-success-light: #E8F5E9;
+  --color-info: #1E88E5;
+  --color-info-light: #E3F2FD;
+
+  /* Pop colors */
+  --color-lime: #C5EF14;
+  --color-lime-light: #F4FBC4;
+  --color-grey: #9E9E9E;
+
+  /* Neutral scale */
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-100: #F5F5F5;
+  --color-neutral-200: #EEEEEE;
+  --color-neutral-300: #E0E0E0;
+  --color-neutral-400: #BDBDBD;
+  --color-neutral-500: #9E9E9E;
+  --color-neutral-600: #757575;
+  --color-neutral-700: #616161;
+  --color-neutral-800: #424242;
+  --color-neutral-900: #212121;
+
+  /* Semantic tokens */
+  --text-primary: #000000;
+  --text-secondary: #757575;
+  --text-disabled: #BDBDBD;
+  --text-on-primary: #FFFFFF;
+  --text-on-accent: #FFFFFF;
+  --text-link: #1E88E5;
+  --text-link-hover: #0D47A1;
+
+  --bg-page: #FAFAFA;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-hover: #F5F5F5;
+  --bg-active: #EEEEEE;
+  --bg-disabled: #F5F5F5;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-sidebar: #FFFFFF;
+  --bg-navbar: #1E88E5;
+
+  --border-default: #E0E0E0;
+  --border-light: #EEEEEE;
+  --border-focus: #1E88E5;
+  --border-error: #F44336;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Spacing scale (4px base grid) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 48px;
+  --space-5xl: 64px;
+
+  /* Layout dimensions */
+  --navbar-height: 56px;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --content-max-width: 1120px;
+  --card-padding: 20px;
+  --input-height: 40px;
+  --button-height-sm: 32px;
+  --button-height-md: 40px;
+  --button-height-lg: 48px;
+
+  /* Tailwind fallback breakpoints (style-guide has no numeric values) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}

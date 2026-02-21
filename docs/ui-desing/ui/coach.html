@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Tracker | AI Coach</title>
+  <style>
+    body { background: #FAFAFA; color: #000000; font-family: "Inter", "Helvetica Neue", Arial, sans-serif; }
+  </style>
+  <link rel="preload" href="./styles/app.css" as="style" />
+  <link rel="stylesheet" href="./styles/tokens.css" />
+  <link rel="stylesheet" href="./styles/app.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="./styles/app.css" /></noscript>
+</head>
+<body>
+  <div class="app-layout">
+    <header class="app-header">
+      <div class="brand">Workout Tracker</div>
+      <nav class="header-nav" aria-label="Primary">
+        <a href="./index.html">Dashboard</a>
+        <a href="./workouts.html">Workouts</a>
+        <a href="./calendar.html">Calendar</a>
+        <a href="./reports.html">Reports</a>
+        <a href="./exercises.html">Exercises</a>
+        <a class="active" href="./coach.html">AI Coach</a>
+      </nav>
+      <div class="header-actions">
+        <button class="menu-toggle focusable" aria-label="Toggle sidebar menu" aria-controls="appSidebar" aria-expanded="false">
+          <span aria-hidden="true">&#9776;</span>
+        </button>
+        <button class="btn btn-ghost focusable header-user" aria-label="Open user menu">JD</button>
+      </div>
+    </header>
+    <button class="mobile-overlay" type="button" aria-label="Close sidebar menu"></button>
+
+    <div class="app-body">
+      <aside id="appSidebar" class="app-sidebar" aria-label="Sidebar">
+        <a class="sidebar-link" href="./index.html">Dashboard</a>
+        <a class="sidebar-link" href="./workouts.html">Workouts</a>
+        <a class="sidebar-link" href="./calendar.html">Calendar</a>
+        <a class="sidebar-link" href="./reports.html">Reports</a>
+        <a class="sidebar-link" href="./exercises.html">Exercises</a>
+        <a class="sidebar-link active" href="./coach.html">AI Coach</a>
+      </aside>
+
+      <main class="app-main">
+        <div class="container">
+          <h1 class="page-title">Workout Coach (Chat IA)</h1>
+          <p class="page-description">
+            Chat embebido, historial, sugerencias rápidas y feedback útil/no útil (PRD sección 5.3.1).
+          </p>
+
+          <section class="panel-split">
+            <article class="card">
+              <h2>Conversación</h2>
+              <div class="chat-feed" aria-live="polite">
+                <p><strong>Usuario:</strong> Quiero ganar masa muscular con 4 días por semana.</p>
+                <p><strong>Workout Coach:</strong> Te recomiendo una rutina Upper/Lower. ¿Tienes restricciones o lesiones?</p>
+                <!-- [COMPONENTE: Historial de conversaciones — ver PRD sección 5.3.1] -->
+              </div>
+              <form class="chat-input" aria-label="Enviar mensaje al coach">
+                <label class="sr-only" for="chatMessage">Mensaje para Workout Coach</label>
+                <input id="chatMessage" type="text" placeholder="Escribe tu objetivo..." />
+                <button class="btn btn-primary" type="button" aria-label="Send message">Enviar</button>
+              </form>
+            </article>
+
+            <aside class="card">
+              <h2>Sugerencias rápidas</h2>
+              <div class="button-row">
+                <button class="btn btn-accent">Crear plan semanal</button>
+                <button class="btn btn-secondary">Analizar progreso</button>
+                <button class="btn btn-ghost">Resolver duda técnica</button>
+              </div>
+              <h3 style="margin-top: 20px;">Feedback</h3>
+              <div class="button-row">
+                <button class="btn btn-secondary" aria-label="Mark response as useful">Útil</button>
+                <button class="btn btn-ghost" aria-label="Mark response as not useful">No útil</button>
+              </div>
+              <!-- [COMPONENTE: Prompts predefinidos y feedback — ver PRD sección 5.3.1] -->
+            </aside>
+          </section>
+
+          <section class="cards-grid" style="margin-top: 24px;">
+            <article class="status status-loading" aria-busy="true">
+              <h3>Cargando respuesta IA</h3>
+              <div data-skeleton></div>
+              <div data-skeleton style="width: 72%;"></div>
+            </article>
+            <article class="status status-empty">
+              <h3>Sin historial</h3>
+              <p>Inicia una conversación para recibir recomendaciones personalizadas.</p>
+            </article>
+            <article class="status status-error" role="alert">
+              <h3>Error del agente</h3>
+              <p>No se pudo generar la recomendación en este momento.</p>
+            </article>
+            <article class="status status-offline">
+              <h3>Sin conexión</h3>
+              <p>El chat no está disponible hasta recuperar conexión.</p>
+            </article>
+            <article class="card">
+              <h3>Estado con datos</h3>
+              <p>Plan actualizado: Upper/Lower con ajuste por molestia de hombro.</p>
+              <!-- [COMPONENTE: Ajustes iterativos del plan — ver PRD sección 5.3.2] -->
+            </article>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const layout = document.querySelector(".app-layout");
+      const toggle = document.querySelector(".menu-toggle");
+      const overlay = document.querySelector(".mobile-overlay");
+      const links = document.querySelectorAll(".sidebar-link");
+
+      if (!layout || !toggle || !overlay) return;
+
+      const closeMenu = function () {
+        layout.classList.remove("menu-open");
+        toggle.setAttribute("aria-expanded", "false");
+      };
+
+      const openMenu = function () {
+        layout.classList.add("menu-open");
+        toggle.setAttribute("aria-expanded", "true");
+      };
+
+      toggle.addEventListener("click", function () {
+        if (layout.classList.contains("menu-open")) {
+          closeMenu();
+          return;
+        }
+        openMenu();
+      });
+
+      overlay.addEventListener("click", closeMenu);
+      links.forEach(function (link) {
+        link.addEventListener("click", closeMenu);
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 768) closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>

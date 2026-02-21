@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Tracker | Calendar</title>
+  <style>
+    body { background: #FAFAFA; color: #000000; font-family: "Inter", "Helvetica Neue", Arial, sans-serif; }
+  </style>
+  <link rel="preload" href="./styles/app.css" as="style" />
+  <link rel="stylesheet" href="./styles/tokens.css" />
+  <link rel="stylesheet" href="./styles/app.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="./styles/app.css" /></noscript>
+</head>
+<body>
+  <div class="app-layout">
+    <header class="app-header">
+      <div class="brand">Workout Tracker</div>
+      <nav class="header-nav" aria-label="Primary">
+        <a href="./index.html">Dashboard</a>
+        <a href="./workouts.html">Workouts</a>
+        <a class="active" href="./calendar.html">Calendar</a>
+        <a href="./reports.html">Reports</a>
+        <a href="./exercises.html">Exercises</a>
+        <a href="./coach.html">AI Coach</a>
+      </nav>
+      <div class="header-actions">
+        <button class="menu-toggle focusable" aria-label="Toggle sidebar menu" aria-controls="appSidebar" aria-expanded="false">
+          <span aria-hidden="true">&#9776;</span>
+        </button>
+        <button class="btn btn-ghost focusable header-user" aria-label="Open user menu">JD</button>
+      </div>
+    </header>
+    <button class="mobile-overlay" type="button" aria-label="Close sidebar menu"></button>
+
+    <div class="app-body">
+      <aside id="appSidebar" class="app-sidebar" aria-label="Sidebar">
+        <a class="sidebar-link" href="./index.html">Dashboard</a>
+        <a class="sidebar-link" href="./workouts.html">Workouts</a>
+        <a class="sidebar-link active" href="./calendar.html">Calendar</a>
+        <a class="sidebar-link" href="./reports.html">Reports</a>
+        <a class="sidebar-link" href="./exercises.html">Exercises</a>
+        <a class="sidebar-link" href="./coach.html">AI Coach</a>
+      </aside>
+
+      <main class="app-main">
+        <div class="container">
+          <h1 class="page-title">Calendario y Programación</h1>
+          <p class="page-description">
+            Vista mensual/semanal, reprogramación drag & drop y adherencia (PRD sección 5.2.3).
+          </p>
+
+          <section class="panel-split">
+            <article class="card">
+              <h2>Vista mensual/semanal</h2>
+              <p>Bloque para calendario visual con entrenamientos programados e indicadores de estado.</p>
+              <!-- [COMPONENTE: Calendario visual interactivo — ver PRD sección 5.2.3] -->
+            </article>
+            <article class="card">
+              <h2>Adherencia del plan</h2>
+              <p>84% de cumplimiento en los últimos 30 días.</p>
+              <span class="pill pill-success">On Track</span>
+            </article>
+          </section>
+
+          <section class="cards-grid" style="margin-top: 24px;">
+            <article class="status status-loading" aria-busy="true">
+              <h3>Cargando calendario</h3>
+              <div data-skeleton></div>
+              <div data-skeleton></div>
+            </article>
+            <article class="status status-empty">
+              <h3>No hay eventos</h3>
+              <p>Programa un entrenamiento para comenzar la semana.</p>
+            </article>
+            <article class="status status-error" role="alert">
+              <h3>Error de calendario</h3>
+              <p>No se pudo recuperar la agenda de entrenamientos.</p>
+            </article>
+            <article class="status status-offline">
+              <h3>Sin conexión</h3>
+              <p>No es posible arrastrar y sincronizar cambios sin red.</p>
+            </article>
+            <article class="card">
+              <h3>Estado con datos</h3>
+              <ul class="simple-list">
+                <li>Lunes 18:00 — Upper A</li>
+                <li>Miércoles 18:00 — Lower A</li>
+                <li>Viernes 18:00 — Upper B</li>
+              </ul>
+              <!-- [COMPONENTE: Reprogramación drag & drop — ver PRD sección 5.2.3] -->
+            </article>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const layout = document.querySelector(".app-layout");
+      const toggle = document.querySelector(".menu-toggle");
+      const overlay = document.querySelector(".mobile-overlay");
+      const links = document.querySelectorAll(".sidebar-link");
+
+      if (!layout || !toggle || !overlay) return;
+
+      const closeMenu = function () {
+        layout.classList.remove("menu-open");
+        toggle.setAttribute("aria-expanded", "false");
+      };
+
+      const openMenu = function () {
+        layout.classList.add("menu-open");
+        toggle.setAttribute("aria-expanded", "true");
+      };
+
+      toggle.addEventListener("click", function () {
+        if (layout.classList.contains("menu-open")) {
+          closeMenu();
+          return;
+        }
+        openMenu();
+      });
+
+      overlay.addEventListener("click", closeMenu);
+      links.forEach(function (link) {
+        link.addEventListener("click", closeMenu);
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 768) closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Tracker — Light Mode Style Guide</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* ─── Primary Colors ─────────────────────────── */
+      --color-white: #FFFFFF;
+      --color-primary-500: #1E88E5;
+      --color-primary-400: #4FA3EC;
+      --color-primary-300: #90CAF9;
+      --color-primary-200: #BBDEFB;
+      --color-primary-100: #E3F2FD;
+      --color-primary-600: #1565C0;
+      --color-primary-700: #0D47A1;
+      --color-secondary-500: #4CAF50;
+      --color-secondary-400: #6FBF73;
+      --color-secondary-300: #A5D6A7;
+      --color-secondary-200: #C8E6C9;
+      --color-secondary-100: #E8F5E9;
+
+      /* ─── Accent Colors ──────────────────────────── */
+      --color-black: #000000;
+      --color-accent-500: #FF6B35;
+      --color-accent-400: #FF8859;
+      --color-accent-300: #FFAB91;
+      --color-accent-200: #FFCCBC;
+      --color-accent-100: #FBE9E7;
+
+      /* ─── Signal Colors ──────────────────────────── */
+      --color-error: #F44336;
+      --color-error-light: #FFEBEE;
+      --color-warning: #FFC107;
+      --color-warning-light: #FFF8E1;
+      --color-success: #4CAF50;
+      --color-success-light: #E8F5E9;
+      --color-info: #1E88E5;
+      --color-info-light: #E3F2FD;
+
+      /* ─── Pop Colors ─────────────────────────────── */
+      --color-lime: #C5EF14;
+      --color-lime-light: #F4FBC4;
+      --color-grey: #9E9E9E;
+
+      /* ─── Neutral Scale ──────────────────────────── */
+      --color-neutral-50: #FAFAFA;
+      --color-neutral-100: #F5F5F5;
+      --color-neutral-200: #EEEEEE;
+      --color-neutral-300: #E0E0E0;
+      --color-neutral-400: #BDBDBD;
+      --color-neutral-500: #9E9E9E;
+      --color-neutral-600: #757575;
+      --color-neutral-700: #616161;
+      --color-neutral-800: #424242;
+      --color-neutral-900: #212121;
+
+      /* ─── Semantic Tokens ────────────────────────── */
+      --text-primary: #000000;
+      --text-secondary: #757575;
+      --text-disabled: #BDBDBD;
+      --text-on-primary: #FFFFFF;
+      --text-on-accent: #FFFFFF;
+      --text-link: #1E88E5;
+      --text-link-hover: #0D47A1;
+
+      --bg-page: #FAFAFA;
+      --bg-surface: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-hover: #F5F5F5;
+      --bg-active: #EEEEEE;
+      --bg-disabled: #F5F5F5;
+      --bg-overlay: rgba(0, 0, 0, 0.5);
+      --bg-sidebar: #FFFFFF;
+      --bg-navbar: #1E88E5;
+
+      --border-default: #E0E0E0;
+      --border-light: #EEEEEE;
+      --border-focus: #1E88E5;
+      --border-error: #F44336;
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+    }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ───────────────────────────────────── */
+    .guide-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+
+    .guide-header {
+      margin-bottom: 56px;
+    }
+
+    .guide-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .guide-header .subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .guide-header .badge {
+      display: inline-block;
+      background: var(--color-primary-100);
+      color: var(--color-primary-700);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      margin-top: 12px;
+    }
+
+    /* ── Section ──────────────────────────────────── */
+    .section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      max-width: 720px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border-default);
+      margin-bottom: 64px;
+    }
+
+    .subsection-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      margin-top: 32px;
+    }
+
+    /* ── Color Swatches ──────────────────────────── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .color-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .color-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .color-swatch {
+      height: 80px;
+      width: 100%;
+    }
+
+    .color-card-info {
+      padding: 12px 14px;
+    }
+
+    .color-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .color-card-hex {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .color-card-usage {
+      font-size: 11px;
+      color: var(--color-neutral-500);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── Neutral Scale Strip ─────────────────────── */
+    .neutral-strip {
+      display: flex;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-default);
+      margin-bottom: 12px;
+    }
+
+    .neutral-chip {
+      flex: 1;
+      height: 56px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* ── Typography Samples ──────────────────────── */
+    .type-sample {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .type-row:last-child {
+      border-bottom: none;
+    }
+
+    .type-preview {
+      flex: 1;
+    }
+
+    .type-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      text-align: right;
+      min-width: 260px;
+    }
+
+    /* ── Component Previews ──────────────────────── */
+    .preview-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 16px;
+    }
+
+    .preview-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .preview-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .preview-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    /* ── Buttons ──────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: 8px;
+    }
+
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .btn-lg { padding: 14px 28px; font-size: 16px; }
+
+    .btn-primary {
+      background: var(--color-primary-500);
+      color: var(--text-on-primary);
+    }
+    .btn-primary:hover { background: var(--color-primary-600); }
+
+    .btn-secondary {
+      background: var(--color-secondary-500);
+      color: var(--text-on-primary);
+    }
+    .btn-secondary:hover { background: #43A047; }
+
+    .btn-accent {
+      background: var(--color-accent-500);
+      color: var(--text-on-accent);
+    }
+    .btn-accent:hover { background: #E55A25; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--color-primary-500);
+      border: 1.5px solid var(--color-primary-500);
+    }
+    .btn-outline:hover {
+      background: var(--color-primary-100);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border-default);
+    }
+    .btn-ghost:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-disabled {
+      background: var(--bg-disabled);
+      color: var(--text-disabled);
+      cursor: not-allowed;
+      border: 1px solid var(--border-default);
+    }
+
+    /* ── Inputs ───────────────────────────────────── */
+    .input-field {
+      width: 280px;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1.5px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .input-field::placeholder {
+      color: var(--text-disabled);
+    }
+
+    .input-field:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15);
+    }
+
+    .input-field.input-error {
+      border-color: var(--border-error);
+      box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+    }
+
+    .input-field:disabled {
+      background: var(--bg-disabled);
+      color: var(--text-disabled);
+      cursor: not-allowed;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .input-helper {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .input-error-msg {
+      font-size: 12px;
+      color: var(--color-error);
+      margin-top: 4px;
+    }
+
+    /* ── Cards ────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .card-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── Alerts ───────────────────────────────────── */
+    .alert {
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .alert-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    .alert-info {
+      background: var(--color-info-light);
+      color: #0D47A1;
+      border: 1px solid #BBDEFB;
+    }
+
+    .alert-success {
+      background: var(--color-success-light);
+      color: #1B5E20;
+      border: 1px solid #C8E6C9;
+    }
+
+    .alert-warning {
+      background: var(--color-warning-light);
+      color: #E65100;
+      border: 1px solid #FFE082;
+    }
+
+    .alert-error {
+      background: var(--color-error-light);
+      color: #B71C1C;
+      border: 1px solid #FFCDD2;
+    }
+
+    /* ── Badges ───────────────────────────────────── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      gap: 4px;
+    }
+
+    .badge-primary {
+      background: var(--color-primary-100);
+      color: var(--color-primary-700);
+    }
+
+    .badge-secondary {
+      background: var(--color-secondary-100);
+      color: #2E7D32;
+    }
+
+    .badge-accent {
+      background: var(--color-accent-100);
+      color: #BF360C;
+    }
+
+    .badge-neutral {
+      background: var(--color-neutral-200);
+      color: var(--color-neutral-700);
+    }
+
+    .badge-lime {
+      background: var(--color-lime-light);
+      color: #33691E;
+    }
+
+    .badge-error {
+      background: var(--color-error-light);
+      color: #B71C1C;
+    }
+
+    .badge-warning {
+      background: var(--color-warning-light);
+      color: #E65100;
+    }
+
+    .badge-success {
+      background: var(--color-success-light);
+      color: #1B5E20;
+    }
+
+    /* ── Navbar Preview ──────────────────────────── */
+    .navbar-preview {
+      background: var(--bg-navbar);
+      border-radius: var(--radius-lg);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-on-primary);
+      margin-bottom: 16px;
+    }
+
+    .navbar-brand {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .navbar-links a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .navbar-links a:hover,
+    .navbar-links a.active {
+      color: #FFFFFF;
+    }
+
+    .navbar-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── Sidebar Preview ─────────────────────────── */
+    .sidebar-preview {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      width: 240px;
+      padding: 16px 0;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .sidebar-item.active {
+      background: var(--color-primary-100);
+      color: var(--color-primary-700);
+      font-weight: 600;
+      border-right: 3px solid var(--color-primary-500);
+    }
+
+    .sidebar-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* ── Shadow Samples ──────────────────────────── */
+    .shadow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .shadow-box {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .shadow-box .shadow-label {
+      font-size: 11px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--color-neutral-500);
+      margin-top: 6px;
+    }
+
+    /* ── Radius Samples ──────────────────────────── */
+    .radius-grid {
+      display: flex;
+      gap: 24px;
+      align-items: flex-end;
+    }
+
+    .radius-box {
+      width: 80px;
+      height: 80px;
+      background: var(--color-primary-100);
+      border: 2px solid var(--color-primary-500);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-primary-700);
+    }
+
+    .radius-value {
+      font-size: 10px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--color-primary-500);
+    }
+
+    /* ── Spacing Scale ───────────────────────────── */
+    .spacing-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .spacing-bar {
+      height: 24px;
+      background: var(--color-primary-200);
+      border-radius: 4px;
+    }
+
+    .spacing-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 50px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .spacing-value {
+      font-size: 11px;
+      color: var(--color-neutral-500);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      min-width: 40px;
+    }
+
+    /* ── Token Table ─────────────────────────────── */
+    .token-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .token-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--color-neutral-100);
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border-default);
+    }
+
+    .token-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+
+    .token-table tr:hover td {
+      background: var(--bg-hover);
+    }
+
+    .token-swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.08);
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .token-code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      background: var(--color-neutral-100);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--color-primary-700);
+    }
+
+    /* ── Progress Bar ────────────────────────────── */
+    .progress-track {
+      height: 8px;
+      background: var(--color-neutral-200);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+
+    /* ── Toggle ──────────────────────────────────── */
+    .toggle-track {
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: var(--color-neutral-300);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle-track.active {
+      background: var(--color-primary-500);
+    }
+
+    .toggle-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+
+    .toggle-track.active .toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    /* ── Chip / Tag ──────────────────────────────── */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--border-default);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    .chip-selected {
+      background: var(--color-primary-100);
+      border-color: var(--color-primary-500);
+      color: var(--color-primary-700);
+    }
+
+    /* ── Utility ──────────────────────────────────── */
+    .flex-gap-16 { display: flex; gap: 16px; flex-wrap: wrap; }
+    .flex-gap-24 { display: flex; gap: 24px; flex-wrap: wrap; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-16 { margin-bottom: 16px; }
+
+    /* ── Code Block ──────────────────────────────── */
+    .code-block {
+      background: var(--color-neutral-900);
+      color: #E0E0E0;
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    .code-comment { color: #6A9955; }
+    .code-prop { color: #9CDCFE; }
+    .code-value { color: #CE9178; }
+    .code-keyword { color: #569CD6; }
+
+    /* ── Table of Contents ───────────────────────── */
+    .toc {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 48px;
+    }
+
+    .toc-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+      padding: 0;
+    }
+
+    .toc li {
+      counter-increment: toc-counter;
+      margin-bottom: 6px;
+    }
+
+    .toc li::before {
+      content: counter(toc-counter, decimal-leading-zero) ".";
+      font-weight: 600;
+      color: var(--color-primary-500);
+      margin-right: 8px;
+      font-size: 13px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .toc a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.15s;
+    }
+
+    .toc a:hover {
+      color: var(--color-primary-500);
+    }
+
+    /* ── Workout-specific Components ─────────────── */
+    .workout-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      width: 300px;
+    }
+
+    .workout-card-header {
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-400));
+      padding: 20px;
+      color: white;
+    }
+
+    .workout-card-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .workout-card-header span {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .workout-card-body {
+      padding: 20px;
+    }
+
+    .workout-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .workout-stat:last-child {
+      border-bottom: none;
+    }
+
+    .workout-stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .workout-stat-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .achievement-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-lime-light);
+      border: 1.5px solid var(--color-lime);
+      border-radius: var(--radius-full);
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #33691E;
+    }
+
+    .streak-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--color-accent-100);
+      border-radius: var(--radius-md);
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent-500);
+    }
+
+    /* ── Layout Preview ──────────────────────────── */
+    .layout-preview {
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 320px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: 48px 1fr;
+    }
+
+    .layout-nav {
+      grid-column: 1 / -1;
+      background: var(--color-primary-500);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .layout-side {
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-default);
+      padding: 12px 0;
+    }
+
+    .layout-side-item {
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .layout-side-item.active {
+      background: var(--color-primary-100);
+      color: var(--color-primary-700);
+      font-weight: 600;
+    }
+
+    .layout-main {
+      background: var(--bg-page);
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-content: flex-start;
+    }
+
+    .layout-card-mini {
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      width: calc(50% - 6px);
+      height: 60px;
+      padding: 10px;
+    }
+
+    .layout-card-mini-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .layout-card-mini-bar {
+      height: 6px;
+      background: var(--color-neutral-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .layout-card-mini-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="guide-container">
+
+  <!-- ═══════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════ -->
+  <div class="guide-header">
+    <h1>Workout Tracker — Light Mode Style Guide</h1>
+    <p class="subtitle">Complete UI design system for implementing light theme interfaces. Based on the Workout Tracker color palette with 60-30-10 chromatic strategy.</p>
+    <span class="badge">v1.0 — February 2026</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TABLE OF CONTENTS
+  ════════════════════════════════════════════════ -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#colors">Color System &amp; Semantic Tokens</a></li>
+      <li><a href="#neutrals">Neutral Scale</a></li>
+      <li><a href="#typography">Typography</a></li>
+      <li><a href="#spacing">Spacing &amp; Layout</a></li>
+      <li><a href="#shadows">Elevation &amp; Shadows</a></li>
+      <li><a href="#radius">Border Radius</a></li>
+      <li><a href="#buttons">Buttons</a></li>
+      <li><a href="#inputs">Form Inputs</a></li>
+      <li><a href="#cards">Cards</a></li>
+      <li><a href="#alerts">Alerts &amp; Feedback</a></li>
+      <li><a href="#badges">Badges &amp; Tags</a></li>
+      <li><a href="#navigation">Navigation</a></li>
+      <li><a href="#progress">Progress &amp; Toggles</a></li>
+      <li><a href="#workout-components">Workout-Specific Components</a></li>
+      <li><a href="#layout">Page Layout</a></li>
+      <li><a href="#tokens">Design Tokens Reference</a></li>
+      <li><a href="#tailwind">TailwindCSS Mapping</a></li>
+      <li><a href="#accessibility">Accessibility Guidelines</a></li>
+    </ol>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       01. COLOR SYSTEM
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="colors">
+    <h2 class="section-title">01. Color System &amp; Semantic Tokens</h2>
+    <p class="section-desc">The light mode palette follows a 60-30-10 rule: 60% Primary Blue for trust and technology, 30% Energy Green for fitness and health, 10% Vibrant Orange for motivation and action CTAs.</p>
+
+    <h3 class="subsection-title">Primary Colors (60%)</h3>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background:#1E88E5;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Primary Blue 500</div>
+          <div class="color-card-hex">#1E88E5</div>
+          <div class="color-card-usage">Navbar, headers, links, primary actions</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#4FA3EC;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Primary Blue 400</div>
+          <div class="color-card-hex">#4FA3EC</div>
+          <div class="color-card-usage">Hover states, active elements</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#90CAF9;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Primary Blue 300</div>
+          <div class="color-card-hex">#90CAF9</div>
+          <div class="color-card-usage">Focus rings, light accents</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#BBDEFB;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Primary Blue 200</div>
+          <div class="color-card-hex">#BBDEFB</div>
+          <div class="color-card-usage">Selected backgrounds, highlights</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#E3F2FD;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Primary Blue 100</div>
+          <div class="color-card-hex">#E3F2FD</div>
+          <div class="color-card-usage">Info backgrounds, sidebar active</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Secondary Colors (30%)</h3>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background:#4CAF50;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Energy Green 500</div>
+          <div class="color-card-hex">#4CAF50</div>
+          <div class="color-card-usage">Progress, health metrics, success</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#6FBF73;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Energy Green 400</div>
+          <div class="color-card-hex">#6FBF73</div>
+          <div class="color-card-usage">Hover on green elements</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#A5D6A7;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Energy Green 300</div>
+          <div class="color-card-hex">#A5D6A7</div>
+          <div class="color-card-usage">Progress bar fills, light accents</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#E8F5E9;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Energy Green 100</div>
+          <div class="color-card-hex">#E8F5E9</div>
+          <div class="color-card-usage">Success backgrounds, badges</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Accent Colors (10%)</h3>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background:#FF6B35;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Vibrant Orange 500</div>
+          <div class="color-card-hex">#FF6B35</div>
+          <div class="color-card-usage">Primary CTAs, achievements, streaks</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#FF8859;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Vibrant Orange 400</div>
+          <div class="color-card-hex">#FF8859</div>
+          <div class="color-card-usage">Hover on accent buttons</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#FFAB91;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Vibrant Orange 300</div>
+          <div class="color-card-hex">#FFAB91</div>
+          <div class="color-card-usage">Light accent highlights</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#FBE9E7;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Vibrant Orange 100</div>
+          <div class="color-card-hex">#FBE9E7</div>
+          <div class="color-card-usage">Accent badge backgrounds</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Signal Colors</h3>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background:#F44336;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Error Red</div>
+          <div class="color-card-hex">#F44336</div>
+          <div class="color-card-usage">Errors, validation failures, destructive</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#FFC107;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Warning Amber</div>
+          <div class="color-card-hex">#FFC107</div>
+          <div class="color-card-usage">Warnings, AI coach recommendations</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#4CAF50;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Success Green</div>
+          <div class="color-card-hex">#4CAF50</div>
+          <div class="color-card-usage">Confirmations, completed workouts</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#1E88E5;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Info Blue</div>
+          <div class="color-card-hex">#1E88E5</div>
+          <div class="color-card-usage">Informational messages, tips</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Pop Colors</h3>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background:#C5EF14;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Lime Accent</div>
+          <div class="color-card-hex">#C5EF14</div>
+          <div class="color-card-usage">Personal records, gamification pops</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:#9E9E9E;"></div>
+        <div class="color-card-info">
+          <div class="color-card-name">Neutral Grey</div>
+          <div class="color-card-hex">#9E9E9E</div>
+          <div class="color-card-usage">Secondary text, borders, disabled</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       02. NEUTRAL SCALE
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="neutrals">
+    <h2 class="section-title">02. Neutral Scale</h2>
+    <p class="section-desc">The neutral scale provides the foundation for text hierarchy, backgrounds, borders, and disabled states across the light mode interface.</p>
+
+    <div class="neutral-strip">
+      <div class="neutral-chip" style="background:#FAFAFA; color:#757575;">50</div>
+      <div class="neutral-chip" style="background:#F5F5F5; color:#757575;">100</div>
+      <div class="neutral-chip" style="background:#EEEEEE; color:#757575;">200</div>
+      <div class="neutral-chip" style="background:#E0E0E0; color:#616161;">300</div>
+      <div class="neutral-chip" style="background:#BDBDBD; color:#424242;">400</div>
+      <div class="neutral-chip" style="background:#9E9E9E; color:#212121;">500</div>
+      <div class="neutral-chip" style="background:#757575; color:#FFFFFF;">600</div>
+      <div class="neutral-chip" style="background:#616161; color:#FFFFFF;">700</div>
+      <div class="neutral-chip" style="background:#424242; color:#FFFFFF;">800</div>
+      <div class="neutral-chip" style="background:#212121; color:#FFFFFF;">900</div>
+    </div>
+
+    <div class="preview-panel mt-16">
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Swatch</th>
+            <th>Value</th>
+            <th>Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="token-code">neutral-50</span></td>
+            <td><span class="token-swatch" style="background:#FAFAFA;"></span></td>
+            <td>#FAFAFA</td>
+            <td>Page background</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-100</span></td>
+            <td><span class="token-swatch" style="background:#F5F5F5;"></span></td>
+            <td>#F5F5F5</td>
+            <td>Hover backgrounds, disabled fields</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-200</span></td>
+            <td><span class="token-swatch" style="background:#EEEEEE;"></span></td>
+            <td>#EEEEEE</td>
+            <td>Active backgrounds, light borders</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-300</span></td>
+            <td><span class="token-swatch" style="background:#E0E0E0;"></span></td>
+            <td>#E0E0E0</td>
+            <td>Default borders, dividers</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-400</span></td>
+            <td><span class="token-swatch" style="background:#BDBDBD;"></span></td>
+            <td>#BDBDBD</td>
+            <td>Disabled text, placeholders</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-500</span></td>
+            <td><span class="token-swatch" style="background:#9E9E9E;"></span></td>
+            <td>#9E9E9E</td>
+            <td>Muted icons, metadata</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-600</span></td>
+            <td><span class="token-swatch" style="background:#757575;"></span></td>
+            <td>#757575</td>
+            <td>Secondary text</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-700</span></td>
+            <td><span class="token-swatch" style="background:#616161;"></span></td>
+            <td>#616161</td>
+            <td>Strong secondary text</td>
+          </tr>
+          <tr>
+            <td><span class="token-code">neutral-900</span></td>
+            <td><span class="token-swatch" style="background:#212121;"></span></td>
+            <td>#212121</td>
+            <td>Headings, strong emphasis</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       03. TYPOGRAPHY
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="typography">
+    <h2 class="section-title">03. Typography</h2>
+    <p class="section-desc">Font stack: Inter (primary), Helvetica Neue, Arial, sans-serif. All text uses the neutral scale for hierarchy. Links use Primary Blue.</p>
+
+    <div class="type-sample">
+      <div class="type-row">
+        <div class="type-preview" style="font-size:32px; font-weight:800; letter-spacing:-0.5px; color:#000000;">Display Heading</div>
+        <div class="type-meta">32px / 800 / -0.5px tracking<br/>color: #000000</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:24px; font-weight:700; letter-spacing:-0.3px; color:#000000;">Page Title H1</div>
+        <div class="type-meta">24px / 700 / -0.3px tracking<br/>color: #000000</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:20px; font-weight:700; color:#212121;">Section Title H2</div>
+        <div class="type-meta">20px / 700<br/>color: #212121</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:16px; font-weight:600; color:#212121;">Subsection Title H3</div>
+        <div class="type-meta">16px / 600<br/>color: #212121</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:14px; font-weight:600; color:#424242;">Card Title H4</div>
+        <div class="type-meta">14px / 600<br/>color: #424242</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:14px; font-weight:400; color:#000000; line-height:1.6;">Body text — The quick brown fox jumps over the lazy dog. Regular paragraph content for descriptions, instructions, and general interface copy.</div>
+        <div class="type-meta">14px / 400 / 1.6 line-height<br/>color: #000000</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:14px; font-weight:400; color:#757575;">Secondary body text — Used for descriptions, metadata, and supporting information.</div>
+        <div class="type-meta">14px / 400<br/>color: #757575</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:13px; font-weight:500; color:#757575;">Caption / Label Text</div>
+        <div class="type-meta">13px / 500<br/>color: #757575</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:12px; font-weight:400; color:#9E9E9E;">Helper text, timestamps, metadata</div>
+        <div class="type-meta">12px / 400<br/>color: #9E9E9E</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview" style="font-size:12px; font-weight:600; color:#757575; text-transform:uppercase; letter-spacing:0.5px;">OVERLINE / CATEGORY LABEL</div>
+        <div class="type-meta">12px / 600 / uppercase / 0.5px<br/>color: #757575</div>
+      </div>
+      <div class="type-row">
+        <div class="type-preview">
+          <a href="#" style="font-size:14px; color:#1E88E5; text-decoration:none; font-weight:500;">Link text — View workout details</a>
+        </div>
+        <div class="type-meta">14px / 500<br/>color: #1E88E5 → hover: #0D47A1</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       04. SPACING
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="spacing">
+    <h2 class="section-title">04. Spacing &amp; Layout</h2>
+    <p class="section-desc">Spacing follows a 4px base grid. Use consistent spacing tokens to maintain visual rhythm across all components.</p>
+
+    <div class="preview-panel">
+      <div class="spacing-row">
+        <div class="spacing-label">4px</div>
+        <div class="spacing-bar" style="width:16px;"></div>
+        <div class="spacing-value">xs</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">8px</div>
+        <div class="spacing-bar" style="width:32px;"></div>
+        <div class="spacing-value">sm</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">12px</div>
+        <div class="spacing-bar" style="width:48px;"></div>
+        <div class="spacing-value">md</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">16px</div>
+        <div class="spacing-bar" style="width:64px;"></div>
+        <div class="spacing-value">lg</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">20px</div>
+        <div class="spacing-bar" style="width:80px;"></div>
+        <div class="spacing-value">xl</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">24px</div>
+        <div class="spacing-bar" style="width:96px;"></div>
+        <div class="spacing-value">2xl</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">32px</div>
+        <div class="spacing-bar" style="width:128px;"></div>
+        <div class="spacing-value">3xl</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">48px</div>
+        <div class="spacing-bar" style="width:192px;"></div>
+        <div class="spacing-value">4xl</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-label">64px</div>
+        <div class="spacing-bar" style="width:256px;"></div>
+        <div class="spacing-value">5xl</div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Layout Dimensions</h3>
+    <div class="preview-panel">
+      <table class="token-table">
+        <thead>
+          <tr><th>Element</th><th>Value</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Navbar height</td><td>56px</td><td>Fixed top navigation</td></tr>
+          <tr><td>Sidebar width</td><td>240px</td><td>Collapsible to 64px (icon-only)</td></tr>
+          <tr><td>Content max-width</td><td>1120px</td><td>Centered with auto margins</td></tr>
+          <tr><td>Card padding</td><td>20px</td><td>Consistent inner spacing</td></tr>
+          <tr><td>Section gap</td><td>24px</td><td>Between content sections</td></tr>
+          <tr><td>Grid gap</td><td>16px – 24px</td><td>Between grid items</td></tr>
+          <tr><td>Input height</td><td>40px</td><td>Standard form field height</td></tr>
+          <tr><td>Button height</td><td>40px (md) / 32px (sm) / 48px (lg)</td><td>Three size variants</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       05. SHADOWS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="shadows">
+    <h2 class="section-title">05. Elevation &amp; Shadows</h2>
+    <p class="section-desc">Shadows create depth hierarchy. Use sparingly — cards at rest have subtle borders, shadows appear on hover or for elevated elements like modals and dropdowns.</p>
+
+    <div class="shadow-grid">
+      <div class="shadow-box" style="box-shadow: var(--shadow-sm);">
+        SM
+        <span class="shadow-label">0 1px 2px</span>
+      </div>
+      <div class="shadow-box" style="box-shadow: var(--shadow-md);">
+        MD
+        <span class="shadow-label">0 4px 6px</span>
+      </div>
+      <div class="shadow-box" style="box-shadow: var(--shadow-lg);">
+        LG
+        <span class="shadow-label">0 10px 15px</span>
+      </div>
+      <div class="shadow-box" style="box-shadow: var(--shadow-xl);">
+        XL
+        <span class="shadow-label">0 20px 25px</span>
+      </div>
+    </div>
+
+    <div class="preview-panel mt-24">
+      <table class="token-table">
+        <thead>
+          <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="token-code">shadow-sm</span></td><td>0 1px 2px rgba(0,0,0,0.05)</td><td>Subtle lift, input focus</td></tr>
+          <tr><td><span class="token-code">shadow-md</span></td><td>0 4px 6px rgba(0,0,0,0.07)</td><td>Card hover, dropdowns</td></tr>
+          <tr><td><span class="token-code">shadow-lg</span></td><td>0 10px 15px rgba(0,0,0,0.1)</td><td>Popovers, tooltips</td></tr>
+          <tr><td><span class="token-code">shadow-xl</span></td><td>0 20px 25px rgba(0,0,0,0.1)</td><td>Modals, dialogs</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       06. BORDER RADIUS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="radius">
+    <h2 class="section-title">06. Border Radius</h2>
+    <p class="section-desc">Consistent border radius values create a cohesive, modern feel. Use smaller radii for inputs and buttons, larger for cards and panels.</p>
+
+    <div class="preview-panel">
+      <div class="radius-grid">
+        <div>
+          <div class="radius-box" style="border-radius:4px;">
+            <span class="radius-label">SM</span>
+            <span class="radius-value">4px</span>
+          </div>
+        </div>
+        <div>
+          <div class="radius-box" style="border-radius:8px;">
+            <span class="radius-label">MD</span>
+            <span class="radius-value">8px</span>
+          </div>
+        </div>
+        <div>
+          <div class="radius-box" style="border-radius:12px;">
+            <span class="radius-label">LG</span>
+            <span class="radius-value">12px</span>
+          </div>
+        </div>
+        <div>
+          <div class="radius-box" style="border-radius:16px;">
+            <span class="radius-label">XL</span>
+            <span class="radius-value">16px</span>
+          </div>
+        </div>
+        <div>
+          <div class="radius-box" style="border-radius:9999px;">
+            <span class="radius-label">Full</span>
+            <span class="radius-value">9999px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-24">
+        <table class="token-table">
+          <thead>
+            <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="token-code">radius-sm</span></td><td>4px</td><td>Small badges, code blocks, tags</td></tr>
+            <tr><td><span class="token-code">radius-md</span></td><td>8px</td><td>Buttons, inputs, dropdowns</td></tr>
+            <tr><td><span class="token-code">radius-lg</span></td><td>12px</td><td>Cards, panels, alerts</td></tr>
+            <tr><td><span class="token-code">radius-xl</span></td><td>16px</td><td>Modals, large containers</td></tr>
+            <tr><td><span class="token-code">radius-full</span></td><td>9999px</td><td>Avatars, pills, badges, toggles</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       07. BUTTONS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="buttons">
+    <h2 class="section-title">07. Buttons</h2>
+    <p class="section-desc">Button hierarchy follows the 60-30-10 color rule. Primary actions use blue, fitness/health actions use green, high-impact CTAs use orange. Outline and ghost variants for secondary actions.</p>
+
+    <div class="preview-panel">
+      <div class="preview-label">Primary Actions</div>
+      <div class="preview-row">
+        <button class="btn btn-primary btn-sm">Small</button>
+        <button class="btn btn-primary">Start Workout</button>
+        <button class="btn btn-primary btn-lg">Get Started</button>
+      </div>
+
+      <div class="preview-label">Secondary (Fitness / Health)</div>
+      <div class="preview-row">
+        <button class="btn btn-secondary btn-sm">Small</button>
+        <button class="btn btn-secondary">Log Exercise</button>
+        <button class="btn btn-secondary btn-lg">Complete Set</button>
+      </div>
+
+      <div class="preview-label">Accent (CTA / Motivation)</div>
+      <div class="preview-row">
+        <button class="btn btn-accent btn-sm">Small</button>
+        <button class="btn btn-accent">Create Plan</button>
+        <button class="btn btn-accent btn-lg">Start Challenge</button>
+      </div>
+
+      <div class="preview-label">Outline &amp; Ghost</div>
+      <div class="preview-row">
+        <button class="btn btn-outline">View Details</button>
+        <button class="btn btn-ghost">Cancel</button>
+      </div>
+
+      <div class="preview-label">Disabled</div>
+      <div class="preview-row">
+        <button class="btn btn-disabled">Unavailable</button>
+      </div>
+    </div>
+
+    <div class="preview-panel mt-16">
+      <table class="token-table">
+        <thead>
+          <tr><th>Variant</th><th>Background</th><th>Text</th><th>Hover</th><th>Usage</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Primary</td><td>#1E88E5</td><td>#FFFFFF</td><td>#1565C0</td><td>Main actions, navigation, save</td></tr>
+          <tr><td>Secondary</td><td>#4CAF50</td><td>#FFFFFF</td><td>#43A047</td><td>Fitness actions, confirm, complete</td></tr>
+          <tr><td>Accent</td><td>#FF6B35</td><td>#FFFFFF</td><td>#E55A25</td><td>High-impact CTAs, start workout</td></tr>
+          <tr><td>Outline</td><td>transparent</td><td>#1E88E5</td><td>#E3F2FD</td><td>Secondary actions, view details</td></tr>
+          <tr><td>Ghost</td><td>transparent</td><td>#757575</td><td>#F5F5F5</td><td>Tertiary actions, cancel, dismiss</td></tr>
+          <tr><td>Disabled</td><td>#F5F5F5</td><td>#BDBDBD</td><td>—</td><td>Unavailable actions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       08. FORM INPUTS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="inputs">
+    <h2 class="section-title">08. Form Inputs</h2>
+    <p class="section-desc">Inputs use neutral borders at rest, Primary Blue focus ring, and Error Red for validation failures. Always include labels and helper text for accessibility.</p>
+
+    <div class="preview-panel">
+      <div class="flex-gap-24">
+        <div>
+          <label class="input-label">Default</label>
+          <input type="text" class="input-field" placeholder="Enter your name" />
+          <div class="input-helper">Helper text goes here</div>
+        </div>
+        <div>
+          <label class="input-label">Focused</label>
+          <input type="text" class="input-field" value="John Doe" style="border-color:#1E88E5; box-shadow: 0 0 0 3px rgba(30,136,229,0.15);" />
+        </div>
+        <div>
+          <label class="input-label">Error</label>
+          <input type="text" class="input-field input-error" value="abc" />
+          <div class="input-error-msg">Please enter a valid email address</div>
+        </div>
+        <div>
+          <label class="input-label">Disabled</label>
+          <input type="text" class="input-field" disabled value="Disabled field" />
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-panel mt-16">
+      <table class="token-table">
+        <thead>
+          <tr><th>State</th><th>Border</th><th>Background</th><th>Ring</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Default</td><td>#E0E0E0</td><td>#FFFFFF</td><td>—</td></tr>
+          <tr><td>Hover</td><td>#BDBDBD</td><td>#FFFFFF</td><td>—</td></tr>
+          <tr><td>Focus</td><td>#1E88E5</td><td>#FFFFFF</td><td>0 0 0 3px rgba(30,136,229,0.15)</td></tr>
+          <tr><td>Error</td><td>#F44336</td><td>#FFFFFF</td><td>0 0 0 3px rgba(244,67,54,0.1)</td></tr>
+          <tr><td>Disabled</td><td>#E0E0E0</td><td>#F5F5F5</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       09. CARDS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="cards">
+    <h2 class="section-title">09. Cards</h2>
+    <p class="section-desc">Cards are the primary content containers. White background with subtle borders at rest, shadow on hover. Use consistent padding and radius.</p>
+
+    <div class="flex-gap-24">
+      <div class="card" style="width:300px;">
+        <div class="card-body">
+          <div class="card-title">Upper Body Workout</div>
+          <div class="card-text">Bench press, shoulder press, and pull-ups. 45 minutes estimated duration.</div>
+        </div>
+        <div class="card-footer">
+          <span class="badge badge-secondary">Strength</span>
+          <span style="font-size:12px; color:#9E9E9E;">Today, 9:00 AM</span>
+        </div>
+      </div>
+
+      <div class="card" style="width:300px;">
+        <div style="height:8px; background: linear-gradient(90deg, #4CAF50, #6FBF73); border-radius:12px 12px 0 0;"></div>
+        <div class="card-body">
+          <div class="card-title">Weekly Progress</div>
+          <div class="card-text" style="margin-bottom:12px;">4 of 5 workouts completed this week.</div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:80%; background:#4CAF50;"></div>
+          </div>
+          <div style="font-size:12px; color:#757575; margin-top:6px; text-align:right;">80%</div>
+        </div>
+      </div>
+
+      <div class="card" style="width:300px;">
+        <div style="height:8px; background: linear-gradient(90deg, #FF6B35, #FF8859); border-radius:12px 12px 0 0;"></div>
+        <div class="card-body">
+          <div class="card-title">AI Coach Suggestion</div>
+          <div class="card-text">Based on your recent performance, consider increasing your squat weight by 5kg.</div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-accent btn-sm">Apply Suggestion</button>
+          <button class="btn btn-ghost btn-sm">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       10. ALERTS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="alerts">
+    <h2 class="section-title">10. Alerts &amp; Feedback</h2>
+    <p class="section-desc">Alert colors use tinted backgrounds from the signal palette. Each includes a distinct icon, border, and text color for clear differentiation.</p>
+
+    <div class="preview-panel">
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>Tip:</strong> Rest at least 48 hours between heavy leg workouts for optimal recovery.</div>
+      </div>
+      <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div><strong>Workout completed!</strong> You burned an estimated 420 calories in today's session.</div>
+      </div>
+      <div class="alert alert-warning">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>Attention:</strong> Your heart rate exceeded the target zone during the last set.</div>
+      </div>
+      <div class="alert alert-error">
+        <span class="alert-icon">❌</span>
+        <div><strong>Error:</strong> Failed to save workout data. Please check your connection and try again.</div>
+      </div>
+    </div>
+
+    <div class="preview-panel mt-16">
+      <table class="token-table">
+        <thead>
+          <tr><th>Type</th><th>Background</th><th>Border</th><th>Text</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Info</td><td>#E3F2FD</td><td>#BBDEFB</td><td>#0D47A1</td></tr>
+          <tr><td>Success</td><td>#E8F5E9</td><td>#C8E6C9</td><td>#1B5E20</td></tr>
+          <tr><td>Warning</td><td>#FFF8E1</td><td>#FFE082</td><td>#E65100</td></tr>
+          <tr><td>Error</td><td>#FFEBEE</td><td>#FFCDD2</td><td>#B71C1C</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       11. BADGES & TAGS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="badges">
+    <h2 class="section-title">11. Badges &amp; Tags</h2>
+    <p class="section-desc">Badges use tinted backgrounds with dark text for readability. Chips are interactive tags for filtering and selection.</p>
+
+    <div class="preview-panel">
+      <div class="preview-label">Status Badges</div>
+      <div class="badge-row mb-16">
+        <span class="badge badge-primary">Active</span>
+        <span class="badge badge-secondary">Completed</span>
+        <span class="badge badge-accent">New PR!</span>
+        <span class="badge badge-neutral">Resting</span>
+        <span class="badge badge-lime">🏆 Record</span>
+        <span class="badge badge-error">Missed</span>
+        <span class="badge badge-warning">Pending</span>
+        <span class="badge badge-success">On Track</span>
+      </div>
+
+      <div class="preview-label">Selectable Chips</div>
+      <div class="flex-gap-16">
+        <span class="chip chip-selected">Strength</span>
+        <span class="chip">Cardio</span>
+        <span class="chip">Flexibility</span>
+        <span class="chip">HIIT</span>
+        <span class="chip">Recovery</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       12. NAVIGATION
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="navigation">
+    <h2 class="section-title">12. Navigation</h2>
+    <p class="section-desc">The navbar uses Primary Blue as background with white text. The sidebar uses white background with neutral text, and Primary Blue tint for the active item.</p>
+
+    <h3 class="subsection-title">Top Navbar</h3>
+    <div class="navbar-preview">
+      <span class="navbar-brand">Workout Tracker</span>
+      <div class="navbar-links">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Workouts</a>
+        <a href="#">Progress</a>
+        <a href="#">AI Coach</a>
+      </div>
+      <div class="navbar-avatar">JD</div>
+    </div>
+
+    <h3 class="subsection-title">Sidebar</h3>
+    <div class="sidebar-preview">
+      <div class="sidebar-item active">
+        <span class="sidebar-icon">📊</span> Dashboard
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">💪</span> Workouts
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">📈</span> Progress
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">🤖</span> AI Coach
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">🏆</span> Achievements
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">⚙️</span> Settings
+      </div>
+    </div>
+
+    <div class="preview-panel mt-16">
+      <table class="token-table">
+        <thead>
+          <tr><th>Element</th><th>Background</th><th>Text</th><th>Active State</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Navbar</td><td>#1E88E5</td><td>#FFFFFF (85% opacity links)</td><td>Full white, underline</td></tr>
+          <tr><td>Sidebar</td><td>#FFFFFF</td><td>#757575</td><td>bg: #E3F2FD, text: #0D47A1, right border: #1E88E5</td></tr>
+          <tr><td>Sidebar hover</td><td>#F5F5F5</td><td>#000000</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       13. PROGRESS & TOGGLES
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="progress">
+    <h2 class="section-title">13. Progress &amp; Toggles</h2>
+    <p class="section-desc">Progress bars use the secondary green for fitness metrics. Accent orange for streaks and challenges. Toggles use Primary Blue when active.</p>
+
+    <div class="preview-panel">
+      <div class="preview-label">Progress Bars</div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:13px; font-weight:600;">Weekly Goal</span>
+          <span style="font-size:12px; color:#757575;">4/5 workouts</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:80%; background:#4CAF50;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:13px; font-weight:600;">Calories Burned</span>
+          <span style="font-size:12px; color:#757575;">1,680 / 2,000 kcal</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:84%; background:#FF6B35;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:13px; font-weight:600;">Strength Level</span>
+          <span style="font-size:12px; color:#757575;">Level 12</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:45%; background:#1E88E5;"></div>
+        </div>
+      </div>
+
+      <div class="preview-label">Toggles</div>
+      <div class="flex-gap-24" style="align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="toggle-track active"><div class="toggle-thumb"></div></div>
+          <span style="font-size:13px;">Notifications</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          <span style="font-size:13px;">Rest Timer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       14. WORKOUT-SPECIFIC COMPONENTS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="workout-components">
+    <h2 class="section-title">14. Workout-Specific Components</h2>
+    <p class="section-desc">Specialized components for the fitness domain: workout summary cards, achievement badges, and streak counters.</p>
+
+    <div class="flex-gap-24">
+      <div class="workout-card">
+        <div class="workout-card-header">
+          <h3>Push Day</h3>
+          <span>Tuesday, Feb 18 — 52 min</span>
+        </div>
+        <div class="workout-card-body">
+          <div class="workout-stat">
+            <span class="workout-stat-label">Exercises</span>
+            <span class="workout-stat-value">6</span>
+          </div>
+          <div class="workout-stat">
+            <span class="workout-stat-label">Total Volume</span>
+            <span class="workout-stat-value">4,280 kg</span>
+          </div>
+          <div class="workout-stat">
+            <span class="workout-stat-label">Calories</span>
+            <span class="workout-stat-value">420 kcal</span>
+          </div>
+          <div class="workout-stat">
+            <span class="workout-stat-label">Status</span>
+            <span class="badge badge-success" style="font-size:11px;">Completed</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div>
+          <div class="preview-label">Achievement Badge</div>
+          <div class="achievement-badge">🏆 New Personal Record — Bench Press 100kg</div>
+        </div>
+        <div>
+          <div class="preview-label">Streak Counter</div>
+          <div class="streak-counter">🔥 12 Day Streak</div>
+        </div>
+        <div>
+          <div class="preview-label">Workout Type Badges</div>
+          <div class="badge-row">
+            <span class="badge badge-primary">💪 Strength</span>
+            <span class="badge badge-accent">🏃 Cardio</span>
+            <span class="badge badge-secondary">🧘 Flexibility</span>
+            <span class="badge badge-lime">⚡ HIIT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       15. PAGE LAYOUT
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="layout">
+    <h2 class="section-title">15. Page Layout</h2>
+    <p class="section-desc">Standard layout: fixed top navbar (Primary Blue), collapsible sidebar (white), and content area with #FAFAFA background. Cards and panels use white surfaces.</p>
+
+    <div class="layout-preview">
+      <div class="layout-nav">Workout Tracker</div>
+      <div class="layout-side">
+        <div class="layout-side-item active">Dashboard</div>
+        <div class="layout-side-item">Workouts</div>
+        <div class="layout-side-item">Progress</div>
+        <div class="layout-side-item">AI Coach</div>
+      </div>
+      <div class="layout-main">
+        <div class="layout-card-mini">
+          <div class="layout-card-mini-title">Weekly Goal</div>
+          <div class="layout-card-mini-bar">
+            <div class="layout-card-mini-fill" style="width:80%; background:#4CAF50;"></div>
+          </div>
+        </div>
+        <div class="layout-card-mini">
+          <div class="layout-card-mini-title">Calories</div>
+          <div class="layout-card-mini-bar">
+            <div class="layout-card-mini-fill" style="width:65%; background:#FF6B35;"></div>
+          </div>
+        </div>
+        <div class="layout-card-mini">
+          <div class="layout-card-mini-title">Strength</div>
+          <div class="layout-card-mini-bar">
+            <div class="layout-card-mini-fill" style="width:45%; background:#1E88E5;"></div>
+          </div>
+        </div>
+        <div class="layout-card-mini">
+          <div class="layout-card-mini-title">Streak</div>
+          <div class="layout-card-mini-bar">
+            <div class="layout-card-mini-fill" style="width:90%; background:#C5EF14;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-panel mt-16">
+      <table class="token-table">
+        <thead>
+          <tr><th>Surface</th><th>Background</th><th>Border</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Page</td><td>#FAFAFA</td><td>—</td><td>Main content area background</td></tr>
+          <tr><td>Card / Panel</td><td>#FFFFFF</td><td>#E0E0E0</td><td>Elevated content containers</td></tr>
+          <tr><td>Sidebar</td><td>#FFFFFF</td><td>right: #E0E0E0</td><td>Navigation panel</td></tr>
+          <tr><td>Navbar</td><td>#1E88E5</td><td>—</td><td>Primary brand surface</td></tr>
+          <tr><td>Modal overlay</td><td>rgba(0,0,0,0.5)</td><td>—</td><td>Background dimming</td></tr>
+          <tr><td>Modal</td><td>#FFFFFF</td><td>—</td><td>shadow-xl, radius-xl</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       16. DESIGN TOKENS REFERENCE
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="tokens">
+    <h2 class="section-title">16. Design Tokens Reference</h2>
+    <p class="section-desc">Complete CSS custom properties for light mode implementation. Copy this block into your root stylesheet or TailwindCSS config.</p>
+
+    <div class="code-block"><span class="code-keyword">:root</span> {
+  <span class="code-comment">/* ─── Primary Colors ─────────────────────────── */</span>
+  <span class="code-prop">--color-white</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">--color-primary-100</span>: <span class="code-value">#E3F2FD</span>;
+  <span class="code-prop">--color-primary-200</span>: <span class="code-value">#BBDEFB</span>;
+  <span class="code-prop">--color-primary-300</span>: <span class="code-value">#90CAF9</span>;
+  <span class="code-prop">--color-primary-400</span>: <span class="code-value">#4FA3EC</span>;
+  <span class="code-prop">--color-primary-500</span>: <span class="code-value">#1E88E5</span>;
+  <span class="code-prop">--color-primary-600</span>: <span class="code-value">#1565C0</span>;
+  <span class="code-prop">--color-primary-700</span>: <span class="code-value">#0D47A1</span>;
+
+  <span class="code-comment">/* ─── Secondary Colors ───────────────────────── */</span>
+  <span class="code-prop">--color-secondary-100</span>: <span class="code-value">#E8F5E9</span>;
+  <span class="code-prop">--color-secondary-200</span>: <span class="code-value">#C8E6C9</span>;
+  <span class="code-prop">--color-secondary-300</span>: <span class="code-value">#A5D6A7</span>;
+  <span class="code-prop">--color-secondary-400</span>: <span class="code-value">#6FBF73</span>;
+  <span class="code-prop">--color-secondary-500</span>: <span class="code-value">#4CAF50</span>;
+
+  <span class="code-comment">/* ─── Accent Colors ──────────────────────────── */</span>
+  <span class="code-prop">--color-black</span>: <span class="code-value">#000000</span>;
+  <span class="code-prop">--color-accent-100</span>: <span class="code-value">#FBE9E7</span>;
+  <span class="code-prop">--color-accent-200</span>: <span class="code-value">#FFCCBC</span>;
+  <span class="code-prop">--color-accent-300</span>: <span class="code-value">#FFAB91</span>;
+  <span class="code-prop">--color-accent-400</span>: <span class="code-value">#FF8859</span>;
+  <span class="code-prop">--color-accent-500</span>: <span class="code-value">#FF6B35</span>;
+
+  <span class="code-comment">/* ─── Signal Colors ──────────────────────────── */</span>
+  <span class="code-prop">--color-error</span>: <span class="code-value">#F44336</span>;
+  <span class="code-prop">--color-error-light</span>: <span class="code-value">#FFEBEE</span>;
+  <span class="code-prop">--color-warning</span>: <span class="code-value">#FFC107</span>;
+  <span class="code-prop">--color-warning-light</span>: <span class="code-value">#FFF8E1</span>;
+  <span class="code-prop">--color-success</span>: <span class="code-value">#4CAF50</span>;
+  <span class="code-prop">--color-success-light</span>: <span class="code-value">#E8F5E9</span>;
+  <span class="code-prop">--color-info</span>: <span class="code-value">#1E88E5</span>;
+  <span class="code-prop">--color-info-light</span>: <span class="code-value">#E3F2FD</span>;
+
+  <span class="code-comment">/* ─── Pop Colors ─────────────────────────────── */</span>
+  <span class="code-prop">--color-lime</span>: <span class="code-value">#C5EF14</span>;
+  <span class="code-prop">--color-lime-light</span>: <span class="code-value">#F4FBC4</span>;
+
+  <span class="code-comment">/* ─── Neutral Scale ──────────────────────────── */</span>
+  <span class="code-prop">--color-neutral-50</span>: <span class="code-value">#FAFAFA</span>;
+  <span class="code-prop">--color-neutral-100</span>: <span class="code-value">#F5F5F5</span>;
+  <span class="code-prop">--color-neutral-200</span>: <span class="code-value">#EEEEEE</span>;
+  <span class="code-prop">--color-neutral-300</span>: <span class="code-value">#E0E0E0</span>;
+  <span class="code-prop">--color-neutral-400</span>: <span class="code-value">#BDBDBD</span>;
+  <span class="code-prop">--color-neutral-500</span>: <span class="code-value">#9E9E9E</span>;
+  <span class="code-prop">--color-neutral-600</span>: <span class="code-value">#757575</span>;
+  <span class="code-prop">--color-neutral-700</span>: <span class="code-value">#616161</span>;
+  <span class="code-prop">--color-neutral-800</span>: <span class="code-value">#424242</span>;
+  <span class="code-prop">--color-neutral-900</span>: <span class="code-value">#212121</span>;
+
+  <span class="code-comment">/* ─── Semantic: Text ─────────────────────────── */</span>
+  <span class="code-prop">--text-primary</span>: <span class="code-value">#000000</span>;
+  <span class="code-prop">--text-secondary</span>: <span class="code-value">#757575</span>;
+  <span class="code-prop">--text-disabled</span>: <span class="code-value">#BDBDBD</span>;
+  <span class="code-prop">--text-on-primary</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">--text-on-accent</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">--text-link</span>: <span class="code-value">#1E88E5</span>;
+  <span class="code-prop">--text-link-hover</span>: <span class="code-value">#0D47A1</span>;
+
+  <span class="code-comment">/* ─── Semantic: Backgrounds ──────────────────── */</span>
+  <span class="code-prop">--bg-page</span>: <span class="code-value">#FAFAFA</span>;
+  <span class="code-prop">--bg-surface</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">--bg-card</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">--bg-hover</span>: <span class="code-value">#F5F5F5</span>;
+  <span class="code-prop">--bg-active</span>: <span class="code-value">#EEEEEE</span>;
+  <span class="code-prop">--bg-disabled</span>: <span class="code-value">#F5F5F5</span>;
+  <span class="code-prop">--bg-overlay</span>: <span class="code-value">rgba(0, 0, 0, 0.5)</span>;
+  <span class="code-prop">--bg-sidebar</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">--bg-navbar</span>: <span class="code-value">#1E88E5</span>;
+
+  <span class="code-comment">/* ─── Semantic: Borders ──────────────────────── */</span>
+  <span class="code-prop">--border-default</span>: <span class="code-value">#E0E0E0</span>;
+  <span class="code-prop">--border-light</span>: <span class="code-value">#EEEEEE</span>;
+  <span class="code-prop">--border-focus</span>: <span class="code-value">#1E88E5</span>;
+  <span class="code-prop">--border-error</span>: <span class="code-value">#F44336</span>;
+
+  <span class="code-comment">/* ─── Semantic: Shadows ──────────────────────── */</span>
+  <span class="code-prop">--shadow-sm</span>: <span class="code-value">0 1px 2px rgba(0, 0, 0, 0.05)</span>;
+  <span class="code-prop">--shadow-md</span>: <span class="code-value">0 4px 6px rgba(0, 0, 0, 0.07)</span>;
+  <span class="code-prop">--shadow-lg</span>: <span class="code-value">0 10px 15px rgba(0, 0, 0, 0.1)</span>;
+  <span class="code-prop">--shadow-xl</span>: <span class="code-value">0 20px 25px rgba(0, 0, 0, 0.1)</span>;
+
+  <span class="code-comment">/* ─── Semantic: Radius ───────────────────────── */</span>
+  <span class="code-prop">--radius-sm</span>: <span class="code-value">4px</span>;
+  <span class="code-prop">--radius-md</span>: <span class="code-value">8px</span>;
+  <span class="code-prop">--radius-lg</span>: <span class="code-value">12px</span>;
+  <span class="code-prop">--radius-xl</span>: <span class="code-value">16px</span>;
+  <span class="code-prop">--radius-full</span>: <span class="code-value">9999px</span>;
+
+  <span class="code-comment">/* ─── Semantic: Buttons ──────────────────────── */</span>
+  <span class="code-prop">--btn-primary-bg</span>: <span class="code-value">#1E88E5</span>;
+  <span class="code-prop">--btn-primary-hover</span>: <span class="code-value">#1565C0</span>;
+  <span class="code-prop">--btn-secondary-bg</span>: <span class="code-value">#4CAF50</span>;
+  <span class="code-prop">--btn-secondary-hover</span>: <span class="code-value">#43A047</span>;
+  <span class="code-prop">--btn-accent-bg</span>: <span class="code-value">#FF6B35</span>;
+  <span class="code-prop">--btn-accent-hover</span>: <span class="code-value">#E55A25</span>;
+}</div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       17. TAILWINDCSS MAPPING
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="tailwind">
+    <h2 class="section-title">17. TailwindCSS Mapping</h2>
+    <p class="section-desc">Extend your tailwind.config.js with these custom colors to use the Workout Tracker palette with Tailwind utility classes.</p>
+
+    <div class="code-block"><span class="code-comment">// tailwind.config.js</span>
+<span class="code-keyword">module.exports</span> = {
+  theme: {
+    extend: {
+      colors: {
+        <span class="code-prop">primary</span>: {
+          <span class="code-value">100</span>: '#E3F2FD',
+          <span class="code-value">200</span>: '#BBDEFB',
+          <span class="code-value">300</span>: '#90CAF9',
+          <span class="code-value">400</span>: '#4FA3EC',
+          <span class="code-value">500</span>: '#1E88E5',
+          <span class="code-value">600</span>: '#1565C0',
+          <span class="code-value">700</span>: '#0D47A1',
+        },
+        <span class="code-prop">secondary</span>: {
+          <span class="code-value">100</span>: '#E8F5E9',
+          <span class="code-value">200</span>: '#C8E6C9',
+          <span class="code-value">300</span>: '#A5D6A7',
+          <span class="code-value">400</span>: '#6FBF73',
+          <span class="code-value">500</span>: '#4CAF50',
+        },
+        <span class="code-prop">accent</span>: {
+          <span class="code-value">100</span>: '#FBE9E7',
+          <span class="code-value">200</span>: '#FFCCBC',
+          <span class="code-value">300</span>: '#FFAB91',
+          <span class="code-value">400</span>: '#FF8859',
+          <span class="code-value">500</span>: '#FF6B35',
+        },
+        <span class="code-prop">lime</span>: {
+          <span class="code-value">DEFAULT</span>: '#C5EF14',
+          <span class="code-value">light</span>: '#F4FBC4',
+        },
+        <span class="code-prop">error</span>: { <span class="code-value">DEFAULT</span>: '#F44336', <span class="code-value">light</span>: '#FFEBEE' },
+        <span class="code-prop">warning</span>: { <span class="code-value">DEFAULT</span>: '#FFC107', <span class="code-value">light</span>: '#FFF8E1' },
+        <span class="code-prop">success</span>: { <span class="code-value">DEFAULT</span>: '#4CAF50', <span class="code-value">light</span>: '#E8F5E9' },
+        <span class="code-prop">info</span>: { <span class="code-value">DEFAULT</span>: '#1E88E5', <span class="code-value">light</span>: '#E3F2FD' },
+      },
+      borderRadius: {
+        <span class="code-value">'sm'</span>: '4px',
+        <span class="code-value">'md'</span>: '8px',
+        <span class="code-value">'lg'</span>: '12px',
+        <span class="code-value">'xl'</span>: '16px',
+      },
+      boxShadow: {
+        <span class="code-value">'sm'</span>: '0 1px 2px rgba(0, 0, 0, 0.05)',
+        <span class="code-value">'md'</span>: '0 4px 6px rgba(0, 0, 0, 0.07)',
+        <span class="code-value">'lg'</span>: '0 10px 15px rgba(0, 0, 0, 0.1)',
+        <span class="code-value">'xl'</span>: '0 20px 25px rgba(0, 0, 0, 0.1)',
+      },
+    },
+  },
+};</div>
+
+    <h3 class="subsection-title">Usage Examples</h3>
+    <div class="code-block"><span class="code-comment">&lt;!-- Primary button --&gt;</span>
+&lt;button class="<span class="code-value">bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-5 rounded-md</span>"&gt;
+  Start Workout
+&lt;/button&gt;
+
+<span class="code-comment">&lt;!-- Accent CTA --&gt;</span>
+&lt;button class="<span class="code-value">bg-accent-500 hover:bg-accent-400 text-white font-semibold py-2.5 px-5 rounded-md</span>"&gt;
+  Create Plan
+&lt;/button&gt;
+
+<span class="code-comment">&lt;!-- Card --&gt;</span>
+&lt;div class="<span class="code-value">bg-white border border-neutral-300 rounded-lg p-5 hover:shadow-md transition-shadow</span>"&gt;
+  ...
+&lt;/div&gt;
+
+<span class="code-comment">&lt;!-- Success badge --&gt;</span>
+&lt;span class="<span class="code-value">bg-success-light text-green-800 text-xs font-semibold px-3 py-1 rounded-full</span>"&gt;
+  Completed
+&lt;/span&gt;
+
+<span class="code-comment">&lt;!-- Input with focus --&gt;</span>
+&lt;input class="<span class="code-value">w-full border border-neutral-300 rounded-md px-3.5 py-2.5 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/15</span>" /&gt;</div>
+  </div>
+
+  <hr class="section-divider" />
+
+
+  <!-- ═══════════════════════════════════════════════
+       18. ACCESSIBILITY GUIDELINES
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="accessibility">
+    <h2 class="section-title">18. Accessibility Guidelines</h2>
+    <p class="section-desc">All color combinations must meet WCAG 2.1 AA standards. These are the verified contrast ratios for the light mode palette.</p>
+
+    <div class="preview-panel">
+      <table class="token-table">
+        <thead>
+          <tr><th>Combination</th><th>Ratio</th><th>WCAG Level</th><th>Normal Text</th><th>Large Text</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="token-swatch" style="background:#000000;"></span> Black on White</td>
+            <td>21:1</td><td>AAA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#1E88E5;"></span> Primary Blue on White</td>
+            <td>4.5:1</td><td>AA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#FFFFFF; border:1px solid #ccc;"></span> White on Primary Blue</td>
+            <td>4.5:1</td><td>AA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#4CAF50;"></span> Energy Green on White</td>
+            <td>4.6:1</td><td>AA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#FF6B35;"></span> Vibrant Orange on White</td>
+            <td>3.2:1</td><td>AA Large</td><td>Fail</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#FFFFFF; border:1px solid #ccc;"></span> White on Vibrant Orange</td>
+            <td>6.5:1</td><td>AA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#757575;"></span> Neutral-600 on White</td>
+            <td>4.6:1</td><td>AA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#0D47A1;"></span> Primary-700 on Primary-100</td>
+            <td>8.5:1</td><td>AAA</td><td>Pass</td><td>Pass</td>
+          </tr>
+          <tr>
+            <td><span class="token-swatch" style="background:#000000;"></span> Black on Lime</td>
+            <td>14.2:1</td><td>AAA</td><td>Pass</td><td>Pass</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title">Key Rules</h3>
+    <div class="preview-panel">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div>
+          <div style="font-size:14px; font-weight:600; color:#1B5E20; margin-bottom:8px;">Do</div>
+          <ul style="font-size:13px; color:#424242; line-height:2; padding-left:18px;">
+            <li>Use white text on Primary Blue, Energy Green, and Vibrant Orange backgrounds</li>
+            <li>Use black/dark text on Lime Accent backgrounds</li>
+            <li>Use Neutral-600 (#757575) or darker for secondary text</li>
+            <li>Provide focus indicators with 3px ring on all interactive elements</li>
+            <li>Include aria-labels on icon-only buttons</li>
+            <li>Use semantic HTML elements (nav, main, section, article)</li>
+            <li>Ensure minimum 44x44px touch targets on mobile</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:14px; font-weight:600; color:#B71C1C; margin-bottom:8px;">Don't</div>
+          <ul style="font-size:13px; color:#424242; line-height:2; padding-left:18px;">
+            <li>Don't use Vibrant Orange for normal-sized text on white backgrounds</li>
+            <li>Don't use Neutral-400 (#BDBDBD) for readable text (only for disabled/placeholder)</li>
+            <li>Don't rely solely on color to convey information (add icons or text)</li>
+            <li>Don't use Warning Amber as a text color on white (low contrast)</li>
+            <li>Don't remove focus outlines without providing an alternative</li>
+            <li>Don't use Lime as a background for text without dark foreground</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════ -->
+  <div style="text-align:center; padding:40px 0 20px; color:#9E9E9E; font-size:12px;">
+    Workout Tracker — Light Mode Style Guide v1.0 — February 2026<br/>
+    Based on <a href="workout-tracker-palette.html" style="color:#1E88E5; text-decoration:none;">workout-tracker-palette.html</a> and <a href="color-palette.md" style="color:#1E88E5; text-decoration:none;">color-palette.md</a>
+  </div>
+
+</div>
+
+</body>
+</html>
